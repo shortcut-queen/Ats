@@ -1,19 +1,18 @@
 <?php
-namespace Ats\Admin;
+namespace Ats\Web;
 /**
  * Created by PhpStorm.
  * User: seven
  * Date: 2018/4/25
  * Time: 22:32
  */
-include("admindo.php");
-$admindo=new AdminDo();
+include("../Service/adminservice.php");
+use Ats\Service\AdminService;
 $admin_id=$_POST['admin_id'];
 $admin_password=$_POST['admin_password'];
-$result=$admindo->loginAdmin($admin_id,$admin_password);
+$result=AdminService::adminLogin($admin_id,$admin_password);
 
-$flag= $result['counts'];
-if ($flag==1)
+if ($result==1)
     echo 'login succeed';
 else
     echo 'login failed';

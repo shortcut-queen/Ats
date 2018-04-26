@@ -7,23 +7,23 @@
  */
 namespace Ats\Conn;
 class Conn{
-    private $con;
-    function init(){
-        $this->con=mysql_connect("172.18.16.207","root","root");
-        if(!$this->con)
+    private static $con;
+    static function init(){
+        self::$con=mysql_connect("172.18.16.207","root","root");
+        if(! self::$con)
             die('连接失败:'.mysql_error());
         else
-            mysql_select_db('ats',$this->con);
+            mysql_select_db('ats', self::$con);
     }
-    function query($sqlstr){
+    static function query($sqlstr){
         $result=mysql_query($sqlstr);
         return  $result;
     }
-    function excute($sqlstr){
+    static function excute($sqlstr){
         $result=mysql_query($sqlstr);
         return $result;
     }
-    function close(){
-        mysql_close($this->con);
+    static function close(){
+        mysql_close( self::$con);
     }
 }
