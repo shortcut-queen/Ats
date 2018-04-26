@@ -23,6 +23,21 @@ elseif (isset($_SESSION['error']))
         名称<input type="text" name="role_name"/>
         <button type="submit">添加</button>
     </form>
+    添加用户
+    <form name="adduser" action="../Web/usercontroller.php" method="post">
+        姓名<input type="text" name="user_name"/>
+        编号<input type="text" name="user_id"/>
+        密码<input type="password" name = "user_password"/>
+        旅<input type="text" name="brigade"/>
+        营<input type="text" name="battalion"/>
+        连<input type="text" name="continuous"/>
+        排<input type="text" name="platoon"/>
+        班<input type="text" name="monitor"/>
+        战士<input type="text" name="warrior"/>
+        是何首长<input type="text" name="officer"/>
+        名称<input type="text" name="role_name"/>
+        <button type="submit">添加</button>
+    </form>
     <form name="addProject" action="../Web/projectcontroller.php" method="post">
         项目名称<input type="text" name="project_name"/>
         项目单位<input type="text" name="project_unit"/>
