@@ -35,7 +35,6 @@ elseif (isset($_SESSION['error']))
         班<input type="text" name="monitor"/>
         战士<input type="text" name="warrior"/>
         是何首长<input type="text" name="officer"/>
-        名称<input type="text" name="role_name"/>
         <button type="submit">添加</button>
     </form>
     <form name="addProject" action="../Web/projectcontroller.php" method="post">
@@ -44,7 +43,7 @@ elseif (isset($_SESSION['error']))
         优秀标准<input type="text" name="project_great"/>
         良好标准<input type="text" name="project_good"/>
         及格标准<input type="text" name="project_qualified"/>
-
+    </form>
 </div>
 </body>
 </html>
