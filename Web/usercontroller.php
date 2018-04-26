@@ -25,6 +25,7 @@ $platoon = $_POST['platoon'];
 $monitor = $_POST['monitor'];
 $warrior = $_POST['warrior'];
 $officer = $_POST['officer'];
+
 $result = UserService::addUser($user_id, $user_name, $user_password, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer);
 
 

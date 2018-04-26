@@ -35,7 +35,6 @@ elseif (isset($_SESSION['error']))
         班<input type="text" name="monitor"/>
         战士<input type="text" name="warrior"/>
         是何首长<input type="text" name="officer"/>
-        名称<input type="text" name="role_name"/>
         <button type="submit">添加</button>
     </form>
     添加项目
