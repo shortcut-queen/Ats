@@ -2,7 +2,7 @@
 namespace Ats\Dao;
 include("../Conn/conn.php");
 use Ats\Conn\Conn;
-class AdminDo{
+class AdminDao{
     //增加管理员
     function addAdmin($admin_id,$admin_name,$admin_password,$admin_type){
         Conn::init();
@@ -20,8 +20,8 @@ class AdminDo{
         $result=Conn::excute($SQL_DELETE_ADMIN);
         Conn::close();
         return $result;//返回true or false
-        }
-        //修改管理员信息（名字，密码，类型）。依赖：admin_id
+    }
+    //修改管理员信息（名字，密码，类型）。依赖：admin_id
     function updateAdmin($admin_id,$admin_name,$admin_password,$admin_type){
         Conn::init();
         $SQL_UPDATE_ADMIN='update ats_admin set Admin_Name='.$admin_name.',Admin_Password='.$admin_password.',Admin_type='.$admin_type.'where Admin_Id='.$admin_id;
