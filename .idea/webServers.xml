@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="d9b015a4-f02a-4f6f-bb4c-ff354e22468f" name="ats" url="http://localhost/ats">
+        <fileTransfer port="0" mountedRoot="E:\phpstudy\WWW\ats" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>
