@@ -27,5 +27,5 @@ if ($result) {
 }
 else{
     $_SESSION['error']='add role failed';
-    header('location:../Admin/manage.php');//添加失败
+    header('location:../Admin/manage.php');//添加失败.
 }
