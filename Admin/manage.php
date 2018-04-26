@@ -18,11 +18,18 @@ elseif (isset($_SESSION['error']))
 <body>
 <div>
     增加角色
-    <form name="adminLogin" action="../Web/rolecontroller.php" method="post">
+    <form name="addRole" action="../Web/rolecontroller.php" method="post">
         等级<input type="text" name="role_rank"/>
-        名称<input type="password" name="role_name"/>
+        名称<input type="text" name="role_name"/>
         <button type="submit">添加</button>
     </form>
+    <form name="addProject" action="../Web/projectcontroller.php" method="post">
+        项目名称<input type="text" name="project_name"/>
+        项目单位<input type="text" name="project_unit"/>
+        优秀标准<input type="text" name="project_great"/>
+        良好标准<input type="text" name="project_good"/>
+        及格标准<input type="text" name="project_qualified"/>
+
 </div>
 </body>
 </html>

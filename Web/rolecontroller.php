@@ -19,11 +19,19 @@ include("../Service/roleService.php");
 use Ats\Service\RoleService;
 $role_name=$_POST['role_name'];
 $role_rank=$_POST['role_rank'];
-$result=RoleService::addRole($role_name,$role_rank);
 
+$result=RoleService::addRole($role_name,$role_rank);
 if ($result) {
-    $_SESSION['success']='add role successed';
-    header('location:../Admin/manage.php');//添加成功
+    $result_create_table=RoleService::addRoleColumn($role_name);
+    if($result_create_table){
+        $_SESSION['success']='add role successed';
+        header('location:../Admin/manage.php');//添加成功
+    }
+    else{
+        RoleService::deleteRole($role_rank);
+        $_SESSION['error']='add role failed';
+        header('location:../Admin/manage.php');//添加失败
+    }
 }
 else{
     $_SESSION['error']='add role failed';
