@@ -9,7 +9,7 @@
 namespace Ats\Service;
 include ("../Dao/roleDao.php");
 use Ats\Dao\RoleDao;
-class roleService
+class RoleService
 {
     static function addRole($role_name,$role_rank){
         return RoleDao::addRole($role_name,$role_rank);

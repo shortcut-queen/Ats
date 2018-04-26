@@ -20,7 +20,21 @@ elseif (isset($_SESSION['error']))
     增加角色
     <form name="adminLogin" action="../Web/rolecontroller.php" method="post">
         等级<input type="text" name="role_rank"/>
-        名称<input type="password" name="role_name"/>
+        名称<input type="text" name="role_name"/>
+        <button type="submit">添加</button>
+    </form>
+    添加用户
+    <form name="adduser" action="../Web/usercontroller.php" method="post">
+        姓名<input type="text" name="user_name"/>
+        编号<input type="text" name="user_id"/>
+        密码<input type="password" name = "user_password"/>
+        旅<input type="text" name="brigade"/>
+        营<input type="text" name="battalion"/>
+        连<input type="text" name="continuous"/>
+        排<input type="text" name="platoon"/>
+        班<input type="text" name="monitor"/>
+        战士<input type="text" name="warrior"/>
+        是何首长<input type="text" name="officer"/>
         <button type="submit">添加</button>
     </form>
 </div>
