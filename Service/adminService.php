@@ -16,4 +16,7 @@ class AdminService{
     static function addAdmin($admin_id,$admin_name,$admin_password,$admin_type){
         return AdminDao::addAdmin($admin_id,$admin_name,$admin_password,$admin_type);
     }
+    static function addUser($user_id, $user_name, $user_password, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer){
+        return AdminDao::addUser($user_id, $user_name, $user_password, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer);
+    }
 }
