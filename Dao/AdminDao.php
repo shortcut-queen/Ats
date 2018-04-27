@@ -48,7 +48,7 @@ class AdminDao{
     }
     //管理员登录查询
     static function loginAdmin($admin_name,$admin_password){
-        $SQL_LOGIN_ADMIN="select COUNT(*) as counts from ats_admin where Admin_Name='$admin_name' and Admin_Password='$admin_password'";
+        $SQL_LOGIN_ADMIN="select Admin_Type from ats_admin where Admin_Name='$admin_name' and Admin_Password='$admin_password'";
         Conn::init();
         $result=Conn::query($SQL_LOGIN_ADMIN);
         Conn::close();
