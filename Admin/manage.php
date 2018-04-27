@@ -33,7 +33,7 @@ elseif (isset($_SESSION['error']))
         <button type="submit">添加</button>
     </form>
     添加用户
-    <form name="addUser" action="../Web/UserController.php" method="post">
+    <form name="addUser" action="../Web/AdminController.php" method="post">
         <input type="hidden" name="form_name" value="addUser">
         姓名<input type="text" name="user_name"/>
         编号<input type="text" name="user_id"/>

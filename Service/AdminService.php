@@ -27,7 +27,5 @@ class AdminService{
     static function updateAdminPassword($admin_name,$new_password){
         return AdminDao::updateAdminPassword($admin_name,$new_password);
     }
-    static function addUser($user_id, $user_name, $user_password, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer){
-        return AdminDao::addUser($user_id, $user_name, $user_password, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer);
-    }
+
 }
