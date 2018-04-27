@@ -8,6 +8,7 @@ if(isset($_SESSION['admin_id']))
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
 </head>
 <body>
 <div>

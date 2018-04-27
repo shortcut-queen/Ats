@@ -14,7 +14,7 @@ elseif (isset($_SESSION['error']))
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>管理员</title>
     <script type="text/javascript">
         function check() {
             var value=document.adduser.brigade.value;
@@ -25,6 +25,7 @@ elseif (isset($_SESSION['error']))
 </head>
 <body>
 <div>
+    <?php include("adminnav.php") ?>
     增加管理员
     <form name="addAdmin" action="../Web/AdminController.php" method="post">
         <input type="hidden" name="form_name" value="addAdmin">

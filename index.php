@@ -1,4 +1,4 @@
 <?php
-define('APP_PATH','./');
-require "Admin/admin.php"
+//define('APP_PATH','./');
+header( "location:./Admin/admin.php");
 ?>
