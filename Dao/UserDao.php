@@ -46,6 +46,14 @@ class UserDao
         Conn::close();
         return $result;//返回true or false
     }
+    //查找用户所属等级及信息
+    static function findUserinfo($user_id){
+        $SQL_FIND_USERRANK ="select Brigade, Battalion, Continuous, Platoon, Monitor, Warrior from ats_user where User_Id ='$user_id'";
+        Conn::init();
+        $result = Conn::query($SQL_FIND_USERRANK);
+        Conn::close();
+        return $result;
+    }
     //查找所有用户
     static function selectUser(){
         $SQL_SELECT_USER="select User_Id,User_Name from  ats_user";
@@ -64,10 +72,15 @@ class UserDao
     }
     //登录查询
     static function loginUser($user_id,$user_password){
-        $SQL_LOGIN_USER="select COUNT(*) as counts from ats_user where User_Id=$user_id and User_Password='$user_password'";
+        $SQL_LOGIN_USER="select User_Name, Officer from ats_user where User_Id=$user_id and User_Password='$user_password'";
         Conn::init();
         $result=Conn::query($SQL_LOGIN_USER);
         Conn::close();
-        return mysql_fetch_array($result)[0];//返回0 or 1
+        return $result;
+    }
+    //查询下属成绩
+    static function  selectLowDownScore($number){
+        $len = count($number);
+        
     }
 }
