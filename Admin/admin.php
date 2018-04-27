@@ -12,8 +12,9 @@ if(isset($_SESSION['admin_id']))
 <body>
 <div>
     管理员登录
-<form name="adminLogin" action="../Web/logincontroller.php" method="post">
-    编号<input type="text" name="admin_name"/>
+<form name="adminLogin" action="../Web/LoginController.php" method="post">
+    <input type="hidden" name="form_name" value="adminLogin">
+    名字<input type="text" name="admin_name"/>
     密码<input type="password" name="admin_password"/>
     <button type="submit">登录</button>
 </form>

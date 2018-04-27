@@ -1,4 +1,4 @@
 <?php
-define('APP_PATH','./Admin');
-require "./Admin/admin.php"
+define('APP_PATH','./');
+require "Admin/admin.php"
 ?>
