@@ -3,10 +3,9 @@
 session_start();
 if(!isset($_SESSION['user_id']))
     header('location:index.php');
-if(isset($_SESSION['success']))
-    echo $_SESSION['success'];
-elseif (isset($_SESSION['error']))
-    echo $_SESSION['error'];
+//应用类
+include("../Web/ProjectController.php");
+use Ats\Web\ProjectController;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,53 +19,34 @@ elseif (isset($_SESSION['error']))
 <body>
 <?php include("usernav.php") ?>
 //查询成绩
-<div style="position: relative;margin-top: 5%;text-align: center">
-<form class="form-horizontal" name="scoreSearch" action="../Web/UserController.php" method="post">
-    <input type="hidden" name="form_name" value="scoreSearch"/>
-    <select name="brigade">
-        <option>--旅级--</option>
-        <option value="all_brigade">全部</option>
-        <option value="1">一旅</option>
-        <option value="2">二旅</option>
-        <option value="3">三旅</option>
-    </select>
-    <select name="battalion">
-        <option>--营级--</option>
-        <option value="all_brigade">全部</option>
-        <option value="1">一营</option>
-        <option value="2">二营</option>
-        <option value="3">三营</option>
-    </select>
-    <select name="continuous">
-        <option>--连级--</option>
-        <option value="all_brigade">全部</option>
-        <option value="1">一连</option>
-        <option value="2">二连</option>
-        <option value="3">三连</option>
-    </select>
-    <select name="platoon">
-        <option>--排级--</option>
-        <option value="all_brigade">全部</option>
-        <option value="1">一排</option>
-        <option value="2">二排</option>
-        <option value="3">三排</option>
-    </select>
-    <select name="monitor">
-        <option>--班级--</option>
-        <option value="all_brigade">全部</option>
-        <option value="1">一班</option>
-        <option value="2">二班</option>
-        <option value="3">三班</option>
-    </select>
-    <select name="project">
-        <option>--项目--</option>
-        <option value="all_brigade">全部</option>
-        <option value="5000m">5000m</option>
-        <option value="1000m">1000m</option>
-        <option value="3000m">3000m</option>
-    </select>
-    <button type="submit">查询</button>
-</form>
+<div style="position: relative;margin-top: 4%;text-align: center">
+<?php
+$rank=intval($_SESSION['officer']);
+if($rank==0)
+    echo "个人成绩";
+if($rank==5)
+    echo "班级成绩";
+ $option_names=array(
+     array('battalion','营级','一营','二营','三营')
+    ,array('continuou','连级','一连','二连','三连')
+    ,array('platoon','排级','一排','二排','三排')
+    ,array('monitor','班级','一班','二班','三班'));
+    if($rank>0 && $rank<5) {
+        //查询所有项目名称
+        $result=ProjectController::selectAllProject();
+        echo"<form class='form-inline' name='scoreSearch' action='../Web/UserController.php' method='post'>";
+        echo "<input type='hidden' name='form_name' value='scoreSearch'/>";
+        echo "<input class='form-control' type='date'/>";
+        for ($i = $rank - 1; $i < 4; $i += 1)
+            echo "<select class='form-control' name=".$option_names[$i][0]."><option value=''>--".$option_names[$i][1]."--</option><option value=''>全部</option><option value='1'>".$option_names[$i][2]."</option><option value='2'>".$option_names[$i][3]."</option><option value='3'>".$option_names[$i][4]."</option></select>";
+        echo "<select class='form-control' name='project_name'><option value='all_project'>--项目--</option><option value='all_project'>全部</option>";
+        while ($row=mysql_fetch_array($result))
+            echo "<option value='$row[0]'>$row[0]</option>";
+        echo "</select>";
+        echo "<button class='btn btn-primary' type='submit'>查询</button>";
+        echo "</form>";
+    }
+ ?>
 </div>
 </body>
 </html>
