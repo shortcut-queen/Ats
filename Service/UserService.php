@@ -29,17 +29,13 @@ class UserService
     static function updateUserPassword($user_id,$new_password){
         return UserDao::updateUserPassword($user_id,$new_password);
     }
-    //用户登录
-    static function loginUser($user_id,$user_password){
-        return UserDao::loginUser($user_id,$user_password);
-    }
     //查找用户所属等级及信息
     static function findUserinfo($user_id){
         return UserDao::findUserinfo($user_id);
     }
     //用户登录验证
-    static function userLogin($user_name,$user_password){
-        return UserDao::loginUser($user_name,$user_password);
+    static function userLogin($user_id,$user_password){
+        return UserDao::loginUser($user_id,$user_password);
     }
     //查询下属成绩
     static function selectLowDownScore($clear_number){
