@@ -21,7 +21,6 @@ class UserDao
         Conn::close();
         return $result;
     }
-
     //删除用户
     static function deleteUser($user_id,$user_name){
         $SQL_DELETE_USER = "delete from ats_user where User_Id= $user_id and User_Name ='$user_name'";
@@ -111,7 +110,7 @@ class UserDao
                 }
                 $SQL_SELECT_LOWDOWNSCORE ="$new" . "$whole_number[$len_clear_result] = $clear_number[$len_clear_result]".")";
                 Conn::init();
-                $result_end = array();
+                $result = array();
                 $result[$j] = Conn::query($SQL_SELECT_LOWDOWNSCORE);
                 Conn::close();
             }
