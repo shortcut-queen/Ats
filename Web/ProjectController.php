@@ -29,9 +29,9 @@ class ProjectController
         $project_good = $_POST['project_good'];
         $project_qualified = $_POST['project_qualified'];
         $result = ProjectService::addProject($project_name, $project_unit, $project_great, $project_good, $project_qualified);
-        if ($result == 1) {
+        if ($result) {
             $result_project = ProjectService::createProjectTable($project_name);
-            if ($result_project == 1) {
+            if ($result_project) {
                 $_SESSION['success'] = '添加项目成功';
                 header('location:../Admin/manage.php');
             } else {

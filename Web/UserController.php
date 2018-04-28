@@ -36,38 +36,35 @@ class UserController{
         //返回用户的所属等级
         $result = UserService::findUserinfo($user_id);
         $number = array1();
-        while ($row = mysql_fetch_array($result)) {
-            switch ($row[5]) {
-                case '0':
-                    $number = array1($date, $project_name);
-                    break;
-                case '1':
-                    $number = array1($date, $project_name,$battalion, $continuous, $platoon, $monitor );
-                    break;
-                case '2':
-                    $number = array1($date, $project_name,$continuous, $platoon, $monitor);
-                    break;
-                case '3':
-                    $number = array1($date, $project_name,$platoon, $monitor);
-                    break;
-                case '4':
-                    $number = array1($date, $project_name,$monitor);
-                    break;
-                case '5':
-                    $number = array1($date, $project_name);
-                    break;
-            }
+        $row = mysql_fetch_array($result);
+        switch ($row[6]) {
+            case '0':
+                $number = array1($date, $project_name,$user_id);
+                break;
+            case '1':
+                $number = array1($date, $project_name,$row[0],$battalion, $continuous, $platoon, $monitor );
+                break;
+            case '2':
+                $number = array1($date, $project_name,$row[0],$row[1],$continuous, $platoon, $monitor);
+                break;
+            case '3':
+                $number = array1($date, $project_name,$row[0],$row[1],$row[2],$platoon, $monitor);
+                break;
+            case '4':
+                $number = array1($date, $project_name,$row[0],$row[1],$row[2],$row[3],$monitor);
+                break;
+            case '5':
+                $number = array1($date, $project_name,$row[0],$row[1],$row[2],$row[3],$row[4]);
+                break;
         }
-        $result1 = UserService::selectLowDownScore($number);
+        //清理数组，删除NULL数据
+        $i =6;
+        while($number[$i]== Null){
+            $i--;
+        }
+        $clear_number=array1_slice($number,0,$i);
+
+        $result1 = UserService::selectLowDownScore($clear_number);
 
     }
-        //if($officer>0){
-        //    switch ($officer){
-        //        case 1: number_array[$brigade];
-        //        case 2: number_array[$brigade,$battalion];
-        //        case 3: number_array[$brigade,$battalion,$continuous];
-        //        case 4: number_array[$brigade,$battalion,$continuous,$platoon,$monitor,$warrior];
-        //        case 5: number_array[$brigade,$battalion,$continuous,$platoon,$monitor,$warrior];
-
-
 }

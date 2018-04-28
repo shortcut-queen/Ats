@@ -38,7 +38,7 @@ class UserService
         return UserDao::loginUser($user_name,$user_password);
     }
     //查询下属成绩
-    static function selectLowDownScore($number){
-        return UserDao::selectLowDownScore($number);
+    static function selectLowDownScore($clear_number){
+        return UserDao::selectLowDownScore($clear_number);
     }
 }
