@@ -48,7 +48,7 @@ class UserDao
     }
     //查找用户所属等级及信息
     static function findUserinfo($user_id){
-        $SQL_FIND_USERRANK ="select Brigade, Battalion, Continuous, Platoon, Monitor, Warrior from ats_user where User_Id ='$user_id'";
+        $SQL_FIND_USERRANK ="select Brigade, Battalion, Continuous, Platoon, Monitor, Warrior,Officer from ats_user where User_Id ='$user_id'";
         Conn::init();
         $result = Conn::query($SQL_FIND_USERRANK);
         Conn::close();
@@ -79,8 +79,43 @@ class UserDao
         return $result;
     }
     //查询下属成绩
-    static function  selectLowDownScore($number){
-        $len = count($number);
-        
+    static function  selectLowDownScore($clear_number){
+        //查找所有项目名称
+        $SQL_FIND_PROJECT_NAME = "select Project_Name from ats_project";
+        Conn:init();
+        $result_project=Conn::query($SQL_FIND_PROJECT_NAME);
+        Conn::close();
+        $result1 = mysql_fetch_array($result_project);
+        $len_project_result = count($result1)-1;
+        //标准的数组
+        $whole_number= array("Date","Project_Name","Brigade","Battalion","Continuous","Platoon","Monitor");
+        $len_clear_result = count($clear_number)-1;
+        //判断选择的单个项目还是全部项目
+        if ($clear_number[1]!='All_Project'){
+            $SQL_SELECT_ONESCORE = "select ats_user.User_name,ats_user.Brigade,ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor,$clear_number[1].Project_Score from ats_user,$clear_number[1] where Project_Data = '$clear_number[0] ' and User_Id in(select  User_Id from ats_user where ";
+            for($i=2;$i<$len_clear_result;$i++){
+                $SQL_ASSIGNMENT ="$whole_number[$i] = $clear_number[$i]";
+                $new = "$SQL_SELECT_ONESCORE" . "$SQL_ASSIGNMENT" . "and";
+            }
+            $SQL_SELECT_LOWDOWNSCORE ="$new" . "$whole_number[$len_clear_result] = $clear_number[$len_clear_result]".")";
+            Conn::init();
+            $result= Conn::query($SQL_SELECT_LOWDOWNSCORE);
+            Conn::close();
+        }
+        else{
+            for($j =0;$j<$len_project_result;$j++){
+                $SQL_SELECT_ONESCORE = "select ats_user.User_name,ats_user.Brigade,ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor,ats_$result1[$j].Project_Score from ats_user,ats_$result1[$j] where Project_Data = '$clear_number[0] ' and User_Id in(select  User_Id from ats_user where ";
+                for($i=2;$i<$len_clear_result;$i++){
+                    $SQL_ASSIGNMENT ="$whole_number[$i] = $clear_number[$i]";
+                    $new = "$SQL_SELECT_ONESCORE" . "$SQL_ASSIGNMENT" . "and";
+                }
+                $SQL_SELECT_LOWDOWNSCORE ="$new" . "$whole_number[$len_clear_result] = $clear_number[$len_clear_result]".")";
+                Conn::init();
+                $result_end = array();
+                $result[$j] = Conn::query($SQL_SELECT_LOWDOWNSCORE);
+                Conn::close();
+            }
+        }
+        return $result;
     }
 }

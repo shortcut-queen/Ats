@@ -29,6 +29,7 @@ class ProjectDao
         Conn::close();
         return $result;
     }
+
     //创建新训练项目表
     static function createProjectTable($project_name){
         $table_name="ats_project_$project_name";
