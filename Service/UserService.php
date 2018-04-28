@@ -29,6 +29,10 @@ class UserService
     static function updateUserPassword($user_id,$new_password){
         return UserDao::updateUserPassword($user_id,$new_password);
     }
+    //用户登录
+    static function loginUser($user_id,$user_password){
+        return UserDao::loginUser($user_id,$user_password);
+    }
     //查找用户所属等级及信息
     static function findUserinfo($user_id){
         return UserDao::findUserinfo($user_id);

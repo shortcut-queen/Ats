@@ -8,7 +8,9 @@ if(isset($_SESSION['admin_name']))
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Static/css/bootstrap.min.css">
+    <script src="../Static/js/bootstrap.min.js"></script>
+    <script src="../Static/js/jquery-3.2.1.js"></script>
 </head>
 <body>
 <div style="position: fixed; margin-top: 10%;margin-left: 60%; width:300px;height:250px;background-color: #46b8da; border-radius: 10px;">
