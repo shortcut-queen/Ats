@@ -1,9 +1,7 @@
 <?php
-session_start();
-if(isset($_SESSION['admin_name']))
-    echo '管理员:'.$_SESSION['admin_name'].'登录成功';
 //未登录返回登陆页面
-else
+session_start();
+if(!isset($_SESSION['admin_name']))
     header('location:admin.php');
 if(isset($_SESSION['success']))
     echo $_SESSION['success'];
@@ -14,14 +12,10 @@ elseif (isset($_SESSION['error']))
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>管理员</title>
-    <script type="text/javascript">
-        function check() {
-            var value=document.adduser.brigade.value;
-            if(value>3)
-                document.getElementById('div_brigade').innerHTML='不能超过3'
-        }
-    </script>
+    <title>管理员:<?php echo $_SESSION['admin_name'];?></title>
+    <link rel="stylesheet" href="../Static/css/bootstrap.min.css">
+    <script src="../Static/js/bootstrap.min.js"></script>
+    <script src="../Static/js/jquery-3.2.1.js"></script>
 </head>
 <body>
 <div>

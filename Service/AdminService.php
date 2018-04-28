@@ -27,5 +27,4 @@ class AdminService{
     static function updateAdminPassword($admin_name,$new_password){
         return AdminDao::updateAdminPassword($admin_name,$new_password);
     }
-
 }

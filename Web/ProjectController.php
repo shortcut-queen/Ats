@@ -11,7 +11,6 @@ session_start();
 if(!isset($_SESSION['admin_name']))
     header('location:../Admin/admin.php');
 //引用类
-include("../Service/ProjectService.php");
 use Ats\Service\ProjectService;
 //判断提交表单的名称
 switch ($_POST['form_name']){
@@ -23,6 +22,8 @@ class ProjectController
 {
     static function addProject()
     {
+        //引用文件
+        include("../Service/ProjectService.php");
         $project_name = $_POST['project_name'];
         $project_unit = $_POST['project_unit'];
         $project_great = $_POST['project_great'];

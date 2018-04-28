@@ -75,7 +75,7 @@ class UserDao
         Conn::init();
         $result=Conn::query($SQL_LOGIN_USER);
         Conn::close();
-        return $result;
+        return mysql_fetch_array($result);
     }
     //查询下属成绩
     static function  selectLowDownScore($clear_number){

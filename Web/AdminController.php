@@ -23,6 +23,7 @@ switch ($_POST['form_name']){
 
 class AdminController
 {
+    //添加管理员
      static function addAdmin()
     {
         $admin_name = $_POST['admin_name'];
@@ -37,7 +38,7 @@ class AdminController
             header('location:../Admin/manage.php');
         }
     }
-    //增加用户
+    //添加用户
     static function addUser()
     {
         $user_id = $_POST['user_id'];
