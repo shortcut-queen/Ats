@@ -39,7 +39,6 @@ class LoginController
         $admin_name = $_POST['admin_name'];
         $admin_password = $_POST['admin_password'];
         $result = AdminService::adminLogin($admin_name, $admin_password);
-        echo $result;
         if ($result) {
             $_SESSION['admin_name'] = $admin_name;
             $_SESSION['admin_type']=$result[0];
@@ -53,15 +52,19 @@ class LoginController
     static function userLogin()
     {
         //引用文件
-        include("../Service/userService.php");
+        include("../Service/UserService.php");
         $user_id = $_POST['user_id'];
         $user_password = $_POST['user_password'];
         $result = UserService::userLogin($user_id,$user_password);
-        echo $result;
         if ($result) {
             $_SESSION['user_id'] = $user_id;
             $_SESSION['user_name'] = $result['user_name'];
             $_SESSION['officer'] = $result['Officer'];
+        $result = UserService::loginUser($user_id, $user_password);
+        if ($result) {
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['user_name']=$result['User_Name'];
+            $_SESSION['officer']=$result['Officer'];
             header('location:../Home/user.php');//登录成功
         } else {
             $_SESSION['error'] = '登录失败';
