@@ -52,6 +52,6 @@ class AdminDao{
         Conn::init();
         $result=Conn::query($SQL_LOGIN_ADMIN);
         Conn::close();
-        return mysql_fetch_array($result)[0];//返回0 or 1
+        return mysql_fetch_array($result);//返回0 or 1
     }
 }

@@ -23,47 +23,48 @@ elseif (isset($_SESSION['error']))
 <div style="position: relative;margin-top: 5%;text-align: center">
 <form class="form-horizontal" name="scoreSearch" action="../Web/UserController.php" method="post">
     <input type="hidden" name="form_name" value="scoreSearch"/>
+    <input type="text" name = "date"/>
     <select name="brigade">
-        <option>--旅级--</option>
-        <option value="all_brigade">全部</option>
+        <option value="">--旅级--</option>
+        <option value="">全部</option>
         <option value="1">一旅</option>
         <option value="2">二旅</option>
         <option value="3">三旅</option>
     </select>
     <select name="battalion">
-        <option>--营级--</option>
-        <option value="all_brigade">全部</option>
+        <option value="">--营级--</option>
+        <option value="">全部</option>
         <option value="1">一营</option>
         <option value="2">二营</option>
         <option value="3">三营</option>
     </select>
     <select name="continuous">
-        <option>--连级--</option>
-        <option value="all_brigade">全部</option>
+        <option value="">--连级--</option>
+        <option value="">全部</option>
         <option value="1">一连</option>
         <option value="2">二连</option>
         <option value="3">三连</option>
     </select>
     <select name="platoon">
-        <option>--排级--</option>
-        <option value="all_brigade">全部</option>
+        <option value="">--排级--</option>
+        <option value="">全部</option>
         <option value="1">一排</option>
         <option value="2">二排</option>
         <option value="3">三排</option>
     </select>
     <select name="monitor">
-        <option>--班级--</option>
-        <option value="all_brigade">全部</option>
+        <option value="">--班级--</option>
+        <option value="">全部</option>
         <option value="1">一班</option>
         <option value="2">二班</option>
         <option value="3">三班</option>
     </select>
     <select name="project">
-        <option>--项目--</option>
-        <option value="all_brigade">全部</option>
-        <option value="5000m">5000m</option>
-        <option value="1000m">1000m</option>
-        <option value="3000m">3000m</option>
+        <option value="all_project">--项目--</option>
+        <option value="all_project">全部</option>
+        <option value="project_5000m">5000m</option>
+        <option value="project_1000m">1000m</option>
+        <option value="project_3000m">3000m</option>
     </select>
     <button type="submit">查询</button>
 </form>

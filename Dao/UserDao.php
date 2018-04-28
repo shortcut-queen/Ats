@@ -65,55 +65,75 @@ class UserDao
     static function existUser($user_id){
         $SQL_FIND_USER="select COUNT(*) from ats_user where User_Id=$user_id";
         Conn::init();
-        $result=Conn::query($SQL_FIND_USER);
+        $result = Conn::query($SQL_FIND_USER);
         Conn::close();
         return mysql_fetch_array($result)[0];//返回0 or 1
     }
     //登录查询
-    static function loginUser($user_id,$user_password){
-        $SQL_LOGIN_USER="select User_Name, Officer from ats_user where User_Id=$user_id and User_Password='$user_password'";
+    static function loginUser($user_id, $user_password)
+    {
+        $SQL_LOGIN_USER = "select User_Name, Officer from ats_user where User_Id=$user_id and User_Password='$user_password'";
         Conn::init();
-        $result=Conn::query($SQL_LOGIN_USER);
+        $result = Conn::query($SQL_LOGIN_USER);
         Conn::close();
         return mysql_fetch_array($result);
     }
-    //查询下属成绩
-    static function  selectLowDownScore($clear_number){
-        //查找所有项目名称
-        $SQL_FIND_PROJECT_NAME = "select Project_Name from ats_project";
-        Conn:init();
-        $result_project=Conn::query($SQL_FIND_PROJECT_NAME);
-        Conn::close();
-        $result1 = mysql_fetch_array($result_project);
-        $len_project_result = count($result1)-1;
+
+    //查询单一项目下属成绩
+    static function oneProjectScore($clear_number)
+    {
+        Conn::init();
         //标准的数组
-        $whole_number= array("Date","Project_Name","Brigade","Battalion","Continuous","Platoon","Monitor");
-        $len_clear_result = count($clear_number)-1;
-        //判断选择的单个项目还是全部项目
-        if ($clear_number[1]!='All_Project'){
-            $SQL_SELECT_ONESCORE = "select ats_user.User_name,ats_user.Brigade,ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor,$clear_number[1].Project_Score from ats_user,$clear_number[1] where Project_Data = '$clear_number[0] ' and User_Id in(select  User_Id from ats_user where ";
-            for($i=2;$i<$len_clear_result;$i++){
-                $SQL_ASSIGNMENT ="$whole_number[$i] = $clear_number[$i]";
-                $new = "$SQL_SELECT_ONESCORE" . "$SQL_ASSIGNMENT" . "and";
-            }
-            $SQL_SELECT_LOWDOWNSCORE ="$new" . "$whole_number[$len_clear_result] = $clear_number[$len_clear_result]".")";
-            Conn::init();
-            $result= Conn::query($SQL_SELECT_LOWDOWNSCORE);
-            Conn::close();
+        $whole_number = array("Date", "project_name", "Brigade", "Battalion", "Continuous", "Platoon", "Monitor");
+        $len_clear_result = count($clear_number) - 1;
+        $SQL_SELECT_ONESCORE = "select ats_user.User_name,ats_user.Brigade,ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor,ats_$clear_number[1].Train_Score from ats_user,ats_$clear_number[1] where  ats_user.User_Id=ats_$clear_number[1].User_Id and ats_$clear_number[1].Train_Date = '$clear_number[0] ' and ats_user.User_Id in(select  User_Id from ats_user where ";
+        for ($i = 2; $i < $len_clear_result; $i++) {
+            $SQL_ASSIGNMENT = "$whole_number[$i] = '$clear_number[$i]'";
+            $SQL_SELECT_ONESCORE = "$SQL_SELECT_ONESCORE" . "$SQL_ASSIGNMENT" . " " . "and" . " ";
         }
-        else{
-            for($j =0;$j<$len_project_result;$j++){
-                $SQL_SELECT_ONESCORE = "select ats_user.User_name,ats_user.Brigade,ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor,ats_$result1[$j].Project_Score from ats_user,ats_$result1[$j] where Project_Data = '$clear_number[0] ' and User_Id in(select  User_Id from ats_user where ";
-                for($i=2;$i<$len_clear_result;$i++){
-                    $SQL_ASSIGNMENT ="$whole_number[$i] = $clear_number[$i]";
-                    $new = "$SQL_SELECT_ONESCORE" . "$SQL_ASSIGNMENT" . "and";
-                }
-                $SQL_SELECT_LOWDOWNSCORE ="$new" . "$whole_number[$len_clear_result] = $clear_number[$len_clear_result]".")";
-                Conn::init();
-                $result = array();
-                $result[$j] = Conn::query($SQL_SELECT_LOWDOWNSCORE);
-                Conn::close();
+        $SQL_SELECT_LOWDOWNSCORE = "$SQL_SELECT_ONESCORE" . "$whole_number[$len_clear_result] = '$clear_number[$len_clear_result]'" . ")";//拼合成SQL语句
+        $result = array();
+        $result[0] = Conn::query($SQL_SELECT_LOWDOWNSCORE);
+        Conn::close();
+        return $result;
+    }
+
+    //查询全部项目下属成绩
+    static function allProjectScore($clear_number)
+    {
+        //查找已有的全部项目
+        $SQL_FIND_PROJECT_NAME = "select Project_Name from ats_project";
+        Conn::init();
+        $result_project = Conn::query($SQL_FIND_PROJECT_NAME);
+        $result1 = mysql_fetch_array($result_project);
+        $len_project_result = count($result1) - 1;
+        //标准的数组
+        $whole_number = array("Date", "project_name", "Brigade", "Battalion", "Continuous", "Platoon", "Monitor");
+        $len_clear_result = count($clear_number) - 1;
+        for ($j = 0; $j < $len_project_result; $j++) {
+            $SQL_SELECT_ONESCORE = "select ats_user.User_name,ats_user.Brigade,ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor,ats_project_$result1[$j].Train_Score from ats_user,ats_project_$result1[$j] where ats_user.User_Id = ats_project_$result1[$j].User_Id and ats_project_$result1[$j].Train_Date = '$clear_number[0] ' and ats_user.User_Id in(select  User_Id from ats_user where ";
+            for ($i = 2; $i < $len_clear_result; $i++) {
+                $SQL_ASSIGNMENT = "$whole_number[$i] = '$clear_number[$i]'";
+                $SQL_SELECT_ONESCORE = "$SQL_SELECT_ONESCORE" . "$SQL_ASSIGNMENT" . " " . "and" . " ";
             }
+            $SQL_SELECT_LOWDOWNSCORE = "$SQL_SELECT_ONESCORE" . "$whole_number[$len_clear_result] = '$clear_number[$len_clear_result]'" . ")";//组合SQL语句
+            $result = array();
+            $result[$j] = Conn::query($SQL_SELECT_LOWDOWNSCORE);//将遍历所有项目的成绩存储
+        }
+        Conn::close();
+        return $result;
+    }
+
+    //查询下属成绩
+    static function selectLowDownScore($clear_number)
+    {
+        if ($clear_number[1] != 'all_project') {
+            //查询指定时间单个项目的个人信息、成绩
+            $result = self::oneProjectScore($clear_number);
+        }
+        else {
+            //查询指定时间所有项目的个人信息、成绩
+            $result = self::allProjectScore($clear_number);
         }
         return $result;
     }
