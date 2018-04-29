@@ -35,7 +35,7 @@ class ProjectController
             $result_project = ProjectService::createProjectTable($project_name);
             if ($result_project) {
                 $_SESSION['success'] = '添加项目成功';
-                header('location:../Admin/manage.php');
+                header('location:../Admin/addproject.php');
             } else {
                 ProjectService::deleteProject($project_name);
                 $_SESSION['error'] = '添加项目失败';

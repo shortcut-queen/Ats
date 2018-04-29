@@ -56,7 +56,7 @@ class LoginController
         $result = UserService::userLogin($user_id,$user_password);
         if ($result) {
             $_SESSION['user_id'] = $user_id;
-            $_SESSION['user_name'] = $result['user_name'];
+            $_SESSION['user_name'] = $result['User_Name'];
             $_SESSION['officer'] = $result['Officer'];
         }else {
             $_SESSION['error'] = '登录失败';
