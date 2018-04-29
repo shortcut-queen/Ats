@@ -28,7 +28,7 @@ if($rank==5)
     echo "班级成绩";
  $option_names=array(
      array('battalion','营级','一营','二营','三营')
-    ,array('continuou','连级','一连','二连','三连')
+    ,array('continuous','连级','一连','二连','三连')
     ,array('platoon','排级','一排','二排','三排')
     ,array('monitor','班级','一班','二班','三班'));
     if($rank>0 && $rank<5) {
@@ -36,7 +36,9 @@ if($rank==5)
         $result=ProjectService::selectAllProject();
         echo"<form class='form-inline' name='scoreSearch' action='../Web/UserController.php' method='post'>";
         echo "<input type='hidden' name='form_name' value='scoreSearch'/>";
-        echo "<input class='form-control' type='date'/>";
+        echo "<input class='form-control' type='date' name='date'/>";
+        for($j=0;$j<$rank-1;$j++)
+            echo "<input type='hidden' name=".$option_names[$j][0]." value=''/>";
         for ($i = $rank - 1; $i < 4; $i += 1)
             echo "<select class='form-control' name=".$option_names[$i][0]."><option value=''>--".$option_names[$i][1]."--</option><option value=''>全部</option><option value='1'>".$option_names[$i][2]."</option><option value='2'>".$option_names[$i][3]."</option><option value='3'>".$option_names[$i][4]."</option></select>";
         echo "<select class='form-control' name='project'><option value='all_project'>--项目--</option><option value='all_project'>全部</option>";
