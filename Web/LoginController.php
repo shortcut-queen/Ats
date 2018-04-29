@@ -15,7 +15,7 @@ if(!isset($_SESSION['admin_name'] ) && !isset($_SESSION['user_id']))
 if(isset($_SESSION['admin_name']))
     header('location:../Admin/manage.php');
 if(isset($_SESSION['user_id']))
-    header('location:../Home/index.php');
+    header('location:../Home/user.php');
 //引用类
 
 use Ats\Service\AdminService;
@@ -32,8 +32,7 @@ switch ($_POST['form_name']){
 class LoginController
 {
     //管理员登录
-    static function adminLogin()
-    {
+    static function adminLogin(){
         //引用文件
         include("../Service/AdminService.php");
         $admin_name = $_POST['admin_name'];
@@ -49,8 +48,7 @@ class LoginController
         }
     }
     //用户登录
-    static function userLogin()
-    {
+    static function userLogin(){
         //引用文件
         include("../Service/UserService.php");
         $user_id = $_POST['user_id'];
@@ -60,13 +58,7 @@ class LoginController
             $_SESSION['user_id'] = $user_id;
             $_SESSION['user_name'] = $result['user_name'];
             $_SESSION['officer'] = $result['Officer'];
-        $result = UserService::loginUser($user_id, $user_password);
-        if ($result) {
-            $_SESSION['user_id'] = $user_id;
-            $_SESSION['user_name']=$result['User_Name'];
-            $_SESSION['officer']=$result['Officer'];
-            header('location:../Home/user.php');//登录成功
-        } else {
+        }else {
             $_SESSION['error'] = '登录失败';
             header('location:../Home/index.php');//登录失败
         }
