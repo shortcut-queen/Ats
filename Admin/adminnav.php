@@ -12,10 +12,10 @@
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&emsp;用户管理&emsp;<span class="caret"></a>
                     <ul class="dropdown-menu">
                         <li style="background-color: #46b8da; font-size: 18px;">
-                            <a href="">查询用户</a>
+                            <a href="selectuser.php">查询用户</a>
                         </li>
                         <li style="background-color: #46b8da;font-size: 18px;">
-                            <a href="">增加用户</a>
+                            <a href="adduser.php">增加用户</a>
                         </li>
                     </ul>
                 </li>
@@ -34,10 +34,10 @@
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&emsp;项目管理&emsp;<span class="caret"></a>
                     <ul class="dropdown-menu">
                         <li style="background-color: #46b8da;font-size: 18px;">
-                            <a href="">所有项目</a>
+                            <a href="allproject.php">所有项目</a>
                         </li>
                         <li style="background-color: #46b8da;font-size: 18px;">
-                            <a href="">增加项目</a>
+                            <a href="addproject.php">增加项目</a>
                         </li>
                     </ul>
                 </li>
@@ -52,10 +52,19 @@
                         </li>
                     </ul>
                 </li>
+                <?php
+                if(intval($_SESSION['admin_type'])==0)
+                    echo" <li class='dropdown' role='presentation' tyle='width: 200px'><a href='' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>&emsp;管理员&emsp;&emsp;<span class='caret'></a><ul class='dropdown-menu'><li style='background-color: #46b8da;font-size: 18px;'><a href='alladmin.php'>所有管理员</a></li><li style='background-color: #46b8da;font-size: 18px;'><a href='addadmin.php'>添加管理员</a></li></ul></li>"
+                    ?>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li style="position:relative;margin-top:13px;margin-right: 10px;">
-                    管理员&emsp;<?php echo $_SESSION['admin_name'];?>&emsp;已登录
+                    <?php
+                    if(intval($_SESSION['admin_type'])==0)
+                        $admin_type="超级管理员：";
+                    else $admin_type="普通管理员：";
+                    echo $admin_type.$_SESSION['admin_name'];
+                    ?>&emsp;已登录
                 </li>
                 <li >
                     <a href="../Web/LogoutController.php" style="margin-right: 20px;" >&emsp;登出</a>

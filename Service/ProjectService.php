@@ -25,4 +25,8 @@ class ProjectService
     static function deleteProject($project_name){
         ProjectDao::deleteProject($project_name);
     }
+    //查询所有项目表
+    static function selectAllProject(){
+        ProjectDao::selectAllProject();
+    }
 }

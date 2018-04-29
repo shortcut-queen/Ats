@@ -29,14 +29,18 @@
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&emsp;个人资料&emsp;<span class="caret"></a>
                     <ul class="dropdown-menu" style="width:inherit;">
                         <li style="background-color: #46b8da;font-size: 18px;">
-                            <a href="">修改密码</a>
+                            <a href="password.php">修改密码</a>
                         </li>
                     </ul>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li style="position:relative;margin-top:13px;margin-right: 10px;">
-                    用户&emsp;<?php echo $_SESSION['user_name'];?>&emsp;已登录
+                    <?php
+                    $rank_names=array('战士','旅长','营长','连长','排长','班长');
+                    $rank=intval($_SESSION['officer']);
+                    echo $rank_names[$rank]."&emsp;".$_SESSION['user_name']."&emsp;已登录";
+                    ?>
                 </li>
                 <li >
                     <a href="../Web/LogoutController.php" style="margin-right: 20px;" >&emsp;登出</a>

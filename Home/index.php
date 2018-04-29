@@ -25,7 +25,7 @@ if(isset($_SESSION['user_id']))
             <label>密&emsp;码</label>
             <input class="form-control" style="width: 90%;" placeholder="登录密码" type="password" name="user_password"/>
         </div>
-        <p></p>
+        <p id="error_show"></p>
         <button class="btn btn-primary" style="margin-left: 30%;width: 30%;" type="submit">登录</button>
     </form>
 </div>

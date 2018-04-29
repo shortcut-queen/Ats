@@ -15,6 +15,8 @@ use Ats\Service\UserService;
 
 //判断提交表单的名称
 switch ($_POST['form_name']){
+    case 'addUser':
+        UserController::addUser();break;
     case 'scoreSearch':
         UserController::selectLowDownScore();break;
 }
@@ -31,7 +33,6 @@ class UserController{
         $platoon = $_POST['platoon'];
         $monitor = $_POST['monitor'];
         $user_id = $_SESSION['user_id'];
-    //echo 'date'.$date.'project'.$project.'battalion'.$battalion.'continuous'.$continuous.'platoon'.$platoon.'monitor'.$monitor;
         //返回用户的所属等级
         $result = UserService::findUserinfo($user_id);
         $number = array();

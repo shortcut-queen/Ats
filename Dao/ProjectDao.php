@@ -48,4 +48,12 @@ class ProjectDao
         Conn::close();
         return $result;
     }
+    //查询所有项目表
+    static function selectAllProject(){
+        $SQL_SELECT_ALL_PROJECT="select Project_Name from ats_project";
+        Conn::init();
+        $result=Conn::excute($SQL_SELECT_ALL_PROJECT);
+        Conn::close();
+        return $result;
+    }
 }

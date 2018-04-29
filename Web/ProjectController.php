@@ -8,7 +8,7 @@ namespace Ats\Web;
  */
 //未登录跳回登陆页面
 session_start();
-if(!isset($_SESSION['admin_name']))
+if(!isset($_SESSION['admin_name'])&&!isset($_SESSION['user_id']))
     header('location:../Admin/admin.php');
 //引用类
 use Ats\Service\ProjectService;
@@ -20,6 +20,7 @@ switch ($_POST['form_name']){
 
 class ProjectController
 {
+    //增加训练项目
     static function addProject()
     {
         //引用文件
@@ -44,5 +45,11 @@ class ProjectController
             $_SESSION['error'] = '添加项目失败';
             header('location:../Admin/manage.php');
         }
+    }
+    //删除训练项目
+
+    //查询所有项目名称
+    static function selectAllProject(){
+        return ProjectService::selectAllProject();
     }
 }
