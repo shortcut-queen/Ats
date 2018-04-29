@@ -27,6 +27,6 @@ class ProjectService
     }
     //查询所有项目表
     static function selectAllProject(){
-       return ProjectDao::selectAllProject();
+        return ProjectDao::selectAllProject();
     }
 }
