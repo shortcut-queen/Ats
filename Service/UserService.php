@@ -41,4 +41,12 @@ class UserService
     static function selectLowDownScore($clear_number){
         return UserDao::selectLowDownScore($clear_number);
     }
+    //查询个人成绩
+    static function myScoreSearch($number){
+        return UserDao::myScoreSearch($number);
+    }
+    //查询成绩饼状图
+    static function selectPieChart($new_number){
+        return UserDao::selectPieChart($new_number);
+    }
 }

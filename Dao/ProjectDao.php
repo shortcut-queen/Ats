@@ -43,8 +43,8 @@ class ProjectDao
         return $result;
     }
     //删除训练项目表
-    static function deleteProjectTable($project_name){
-        $table_name="ats_project_$project_name";
+    static function deleteProjectTable($project_id){
+        $table_name="ats_project_$project_id";
         $SQL_DELETE_PROJECT_TABLE="drop table $table_name";
         Conn::init();
         $result=Conn::excute($SQL_DELETE_PROJECT_TABLE);
