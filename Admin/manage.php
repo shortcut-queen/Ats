@@ -18,38 +18,9 @@ elseif (isset($_SESSION['error']))
     <script src="../Static/js/jquery-3.2.1.js"></script>
 </head>
 <body>
-<div>
-    <?php include("adminnav.php") ?>
-    增加管理员
-    <form name="addAdmin" action="../Web/AdminController.php" method="post">
-        <input type="hidden" name="form_name" value="addAdmin">
-        姓名<input type="text" name="admin_name"/>
-        <button type="submit">添加</button>
-    </form>
-    添加用户
-    <form name="addUser" action="../Web/AdminController.php" method="post">
-        <input type="hidden" name="form_name" value="addUser">
-        姓名<input type="text" name="user_name"/>
-        编号<input type="text" name="user_id"/>
-        旅<input type="text" name="brigade"/>
-        营<input type="text" name="battalion"/>
-        连<input type="text" name="continuous"/>
-        排<input type="text" name="platoon"/>
-        班<input type="text" name="monitor"/>
-        战士<input type="text" name="warrior"/>
-        是何首长<input type="text" name="officer"/>
-        <button type="submit">添加</button>
-    </form>
-    添加项目
-    <form name="addProject" action="../Web/ProjectController.php" method="post">
-        <input type="hidden" name="form_name" value="addProject">
-        项目名称<input type="text" name="project_name"/>
-        项目单位<input type="text" name="project_unit"/>
-        优秀标准<input type="text" name="project_great"/>
-        良好标准<input type="text" name="project_good"/>
-        及格标准<input type="text" name="project_qualified"/>
-        <button type="submit">添加</button>
-    </form>
+<?php include("adminnav.php") ?>
+<div style="position: relative;margin-top: 8%;width:100%;">
+    龙虎榜
 </div>
 </body>
 </html>

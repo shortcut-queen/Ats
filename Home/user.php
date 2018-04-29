@@ -19,6 +19,8 @@ elseif (isset($_SESSION['error']))
 </head>
 <body>
 <?php include("usernav.php") ?>
-//龙虎榜
+<div style="position: relative;margin-top: 8%;width:100%;">
+    龙虎榜
+</div>
 </body>
 </html>

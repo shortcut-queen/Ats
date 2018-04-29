@@ -24,14 +24,12 @@ use Ats\Service\ProjectService;
 $rank=intval($_SESSION['officer']);
 if($rank==0)
     echo "个人成绩";
-if($rank==5)
-    echo "班级成绩";
  $option_names=array(
      array('battalion','营级','一营','二营','三营')
     ,array('continuous','连级','一连','二连','三连')
     ,array('platoon','排级','一排','二排','三排')
     ,array('monitor','班级','一班','二班','三班'));
-    if($rank>0 && $rank<5) {
+    if($rank>0) {
         //查询所有项目名称
         $result=ProjectService::selectAllProject();
         echo"<form class='form-inline' name='scoreSearch' action='../Web/UserController.php' method='post'>";
