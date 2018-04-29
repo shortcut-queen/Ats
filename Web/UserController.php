@@ -12,7 +12,7 @@ if(!isset($_SESSION['user_id']))
     header('location:../Home/index.php');
 include("../Service/UserService.php");
 use Ats\Service\UserService;
-
+use Ats\Web\ResultShow;
 //判断提交表单的名称
 switch ($_POST['form_name']){
     case 'addUser':
@@ -26,20 +26,25 @@ switch ($_POST['form_name']){
 class UserController{
     //查询个人成绩
     static function myScoreSearch(){
+        include("ResultShow.php");
         $date = $_POST['date'];
         $project = $_POST['project'];
         $user_id = $_SESSION['user_id'];
         $number = array($date,$project,$user_id);
         $result = UserService::myScoreSearch($number);
+        $_SESSION['result']=$result;
+        $echo_str=ResultShow::myScoreShow();
+        echo $echo_str;
+
         #echo mysql_fetch_array($result[2])[0];
-        for($i=2;$i<count($result);$i++) {
-        echo "project_name:" . $result[0][$i - 2] . "  project_unit:" . $result[1][$i - 2] . "</br>";
-            while ($row = mysql_fetch_array($result[$i])) {
-                echo "User_ID:" . $row[0] . "\tUser_Name:" . $row[1] . "\tScore:" . $row[2];
-                echo "</br>";
-            }
-            echo "</br></br>";
-        }
+//        for($i=2;$i<count($result);$i++) {
+//        echo "project_name:" . $result[0][$i - 2] . "  project_unit:" . $result[1][$i - 2] . "</br>";
+//            while ($row = mysql_fetch_array($result[$i])) {
+//                echo "User_ID:" . $row[0] . "\tUser_Name:" . $row[1] . "\tScore:" . $row[2];
+//                echo "</br>";
+//            }
+//            echo "</br></br>";
+//        }
     }
 
 
