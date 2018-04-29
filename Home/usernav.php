@@ -8,26 +8,21 @@
                 <li class="active" style="width: 200px">
                     <a href="">军校训练管理系统</a>
                 </li>
-                <li class="dropdown" role="presentation" tyle="width: 200px">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&emsp;成绩分析&emsp;<span class="caret"></a>
-                    <ul class="dropdown-menu">
-                        <li style="background-color: #46b8da; font-size: 18px;">
-                            <a href="score.php">成绩查询</a>
-                        </li>
-                        <li style="background-color: #46b8da;font-size: 18px;">
-                            <a href="">图表对比</a>
-                        </li>
-                        <li style="background-color: #46b8da;font-size: 18px;">
-                            <a href="">折线分析</a>
-                        </li>
-                    </ul>
-                </li>
+                <?php
+                if(intval($_SESSION['officer'])!=0)
+                    echo "<li class='dropdown' role='presentation' tyle='width: 200px'><a href='' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>&emsp;成绩分析&emsp;<span class='caret'></a><ul class='dropdown-menu'><li style='background-color: #46b8da; font-size: 18px;'><a href='score.php'>成绩查询</a></li><li style='background-color: #46b8da;font-size: 18px;'><a href=''>图表对比</a></li><li style='background-color: #46b8da;font-size: 18px;'><a href=''>折线分析</a></li></ul></li>";
+                else
+                    echo "<li><a href='myscore.php'>&emsp;个人成绩&emsp;</a></li>";
+                ?>
                 <li>
-                    <a href="" >&nbsp;资源库&nbsp;</a>
+                    <a href="" >&emsp;资源库&emsp;</a>
                 </li>
                 <li class="dropdown" role="presentation" tyle="width: 200px">
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&emsp;个人资料&emsp;<span class="caret"></a>
                     <ul class="dropdown-menu" style="width:inherit;">
+                        <li style="background-color: #46b8da;font-size: 18px;">
+                            <a href="myinfo.php">基本信息</a>
+                        </li>
                         <li style="background-color: #46b8da;font-size: 18px;">
                             <a href="password.php">修改密码</a>
                         </li>
