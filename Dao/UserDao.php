@@ -164,10 +164,10 @@ class UserDao
         $project_unit_array =array();
         while ($row = mysql_fetch_array($result_project)) {
             $clear_number[1]=$row[0];//赋值项目名称，替换$clear_name[1]中的项目名进行循环遍历
-            array_push($project_name_array,$row[1]);
-            array_push($project_unit_array,$row[2]);
+//            array_push($project_name_array,$row[1]);
+//            array_push($project_unit_array,$row[2]);
             $result_score=self::oneProjectScore($clear_number);
-            if(mysql_fetch_array($result_score[0])[0]!=NULL){
+            if(mysql_num_rows($result_score[0])>=1){
                 array_push($project_name_array,$row[1]);
                 array_push($project_unit_array,$row[2]);
                 array_push($result, $result_score[0]);//将遍历所有项目的成绩存储
@@ -192,9 +192,29 @@ class UserDao
         return $result;
     }
     //查询成绩饼状图
-    static function selectPieChart($new_number)
-    {
-
+    static function selectPieChart($new_number){
+        $whole_number = array("Date", "project", "Brigade", "Battalion", "Continuous", "Platoon", "Monitor");
+        $len_new_number = count($new_number);
+        $string = $whole_number[$len_new_number];
+        $result_end = array();
+        Conn::init();
+        $unit =array();
+        for($i = 1;$i<4;$i++){
+            $SQL_PIE_CHARTPART = "select Train_Score from ats_project_$new_number[1] where Train_Date = '$new_number[0]' and User_Id in(select User_Id from ats_user where ";
+            for($j =2;$j<$len_new_number;$j++){
+               $SQL_ASSIGMENT = "$whole_number[$j]='$new_number[$j]'";
+               $SQL_PIE_CHARTPART = "$SQL_PIE_CHARTPART" . "$SQL_ASSIGMENT"." "."and" ." ";
+            }
+            $SQL_PIE_CHART = "$SQL_PIE_CHARTPART" . "$string = '$i'".")";
+            $result=Conn::query($SQL_PIE_CHART);
+            if(mysql_num_rows($result)>=1){
+                array_push($result_end,$result);
+                array_push($unit,$i);
+            }
+        }
+        array_unshift($result_end,$unit);
+        Conn::close();
+        return $result_end;
     }
 
 }

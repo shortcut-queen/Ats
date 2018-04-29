@@ -21,6 +21,8 @@ switch ($_POST['form_name']){
         UserController::selectLowDownScore();break;
     case 'myScoreSearch':
         UserController:: myScoreSearch();break;
+    case 'scoreCompare':
+        UserController::selectPiechart();break;
 }
 
 class UserController{
@@ -32,7 +34,6 @@ class UserController{
         $user_id = $_SESSION['user_id'];
         $number = array($date,$project,$user_id);
         $result = UserService::myScoreSearch($number);
-        $_SESSION['result']=$result;
         $echo_str=ResultShow::myScoreShow();
         echo $echo_str;
 
@@ -91,7 +92,7 @@ class UserController{
         while($number[$i]== ""){
             $i--;
         }
-        $clear_number=array_slice($number,0,$i+1);
+        $clear_number = array_slice($number, 0, $i + 1);
         $result1 = UserService::selectLowDownScore($clear_number);
         //演示输出
         for($i=2;$i<count($result1);$i++) {
@@ -112,7 +113,6 @@ class UserController{
         $battalion = $_POST['battalion'];
         $continuous = $_POST['continuous'];
         $platoon = $_POST['platoon'];
-        $monitor = $_POST['monitor'];
         //返回用户的所属等级
         $result = UserService::findUserinfo($user_id);
         $number = array();
@@ -140,6 +140,16 @@ class UserController{
         }
         $new_number = array_slice($number, 0,$i);
         $result = UserService::selectPieChart($new_number);
-
+        //echo mysql_fetch_array($result[0])[0];
+        #echo count($result);
+        //演示输出
+        for ($i=1; $i<count($result); $i++) {
+            echo "oo:". $result[0][$i-1];
+            while($row=mysql_fetch_array($result[$i])){
+                echo "score:".$row[0];
+                echo "</br>";
+        }
+            echo "</br></br>";
+        }
     }
 }
