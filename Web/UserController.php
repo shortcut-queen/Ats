@@ -21,19 +21,23 @@ switch ($_POST['form_name']){
         UserController::selectLowDownScore();break;
     case 'myScoreSearch':
         UserController:: myScoreSearch();break;
+    case 'scoreCompare':
+        UserController::selectPiechart();break;
 }
 
-class UserController{
+class UserController
+{
     //查询个人成绩
-    static function myScoreSearch(){
+    static function myScoreSearch()
+    {
         $date = $_POST['date'];
         $project = $_POST['project'];
         $user_id = $_SESSION['user_id'];
-        $number = array($date,$project,$user_id);
+        $number = array($date, $project, $user_id);
         $result = UserService::myScoreSearch($number);
         #echo mysql_fetch_array($result[2])[0];
-        for($i=2;$i<count($result);$i++) {
-        echo "project_name:" . $result[0][$i - 2] . "  project_unit:" . $result[1][$i - 2] . "</br>";
+        for ($i = 2; $i < count($result); $i++) {
+            echo "project_name:" . $result[0][$i - 2] . "  project_unit:" . $result[1][$i - 2] . "</br>";
             while ($row = mysql_fetch_array($result[$i])) {
                 echo "User_ID:" . $row[0] . "\tUser_Name:" . $row[1] . "\tScore:" . $row[2];
                 echo "</br>";
@@ -44,7 +48,7 @@ class UserController{
 
 
     //返回所要查询的字段数组
-    static function selectNumber($resultinfo,$date,$project,$battalion,$continuous,$platoon,$monitor)
+    static function selectNumber($resultinfo, $date, $project, $battalion, $continuous, $platoon, $monitor)
     {
         $number = array();
         $row = mysql_fetch_array($resultinfo);
@@ -67,6 +71,7 @@ class UserController{
         }
         return $number;
     }
+
     //查询当前用户下属单位成绩
     static function selectLowDownScore()
     {
@@ -107,7 +112,6 @@ class UserController{
         $battalion = $_POST['battalion'];
         $continuous = $_POST['continuous'];
         $platoon = $_POST['platoon'];
-        $monitor = $_POST['monitor'];
         //返回用户的所属等级
         $result = UserService::findUserinfo($user_id);
         $number = array();
@@ -127,14 +131,24 @@ class UserController{
                 break;
         }
         //查看用户选择何种等级进行对比，过滤数组
-        $i =2;
-        while($number[$i]!=' '){
+        $i = 2;
+        while ($number[$i]!= NULL) {
             $i++;
             if($i>5)
                 break;
         }
         $new_number = array_slice($number, 0,$i);
         $result = UserService::selectPieChart($new_number);
-
+        //echo mysql_fetch_array($result[0])[0];
+        #echo count($result);
+        //演示输出
+        for ($i=1; $i<count($result); $i++) {
+            echo "oo:". $result[0][$i-1];
+            while($row=mysql_fetch_array($result[$i])){
+                echo "score:".$row[0];
+                echo "</br>";
+        }
+            echo "</br></br>";
+        }
     }
 }
