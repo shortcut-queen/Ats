@@ -106,7 +106,7 @@ class UserDao
             $number[1]=$row[0];
 
             $result_score=self::myOneProjectScore($number);
-            if(mysql_fetch_array($result_score[0])[0]!=null){
+            if(mysql_num_rows($result_score[0])[0]!=null){
                 array_push($project_unit_array,$row[2]);
                 array_push($project_name_array,$row[1]);
                 array_push($result, $result_score[0]);//将遍历所有项目的成绩存储
