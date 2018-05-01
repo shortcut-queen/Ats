@@ -15,6 +15,22 @@ use Ats\Service\ProjectService;
     <link rel="stylesheet" href="../Static/css/bootstrap.min.css">
     <script src="../Static/js/bootstrap.min.js"></script>
     <script src="../Static/js/jquery-3.2.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#buttonSearch").click(function(){
+                $.post("../Web/UserController.php",
+                    {
+                        form_name:document.myScoreSearch.form_name.value,
+                        date:document.myScoreSearch.date.value,
+                        project:document.myScoreSearch.project.value,
+                    },
+                    function(data){
+                        document.getElementById('table_name').innerHTML=document.myScoreSearch.project.value;
+                        document.getElementById('myScoreDiv').innerHTML=data;
+                    });
+            });
+        });
+    </script>
 </head>
 <body>
 <?php include("usernav.php") ?>
@@ -30,9 +46,11 @@ use Ats\Service\ProjectService;
         while ($row=mysql_fetch_array($result))
             echo "<option value='$row[0]'>$row[1]</option>";
         echo "</select>";
-        echo "<button class='btn btn-primary' type='submit'>查询</button>";
+        echo "<button id='buttonSearch' class='btn btn-primary' type='button'>查询</button>";
         echo "</form>";
-    ?>
+        ?>
 </div>
+<label id="table_name" style="position: relative;margin-top: 5%;"></label>
+<div id="myScoreDiv"></div>
 </body>
 </html>

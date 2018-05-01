@@ -15,6 +15,25 @@ use Ats\Service\ProjectService;
     <link rel="stylesheet" href="../Static/css/bootstrap.min.css">
     <script src="../Static/js/bootstrap.min.js"></script>
     <script src="../Static/js/jquery-3.2.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#buttonSearch").click(function(){
+                $.post("../Web/UserController.php",
+                    {
+                        form_name:document.scoreSearch.form_name.value,
+                        date:document.scoreSearch.date.value,
+                        battalion:document.scoreSearch.battalion.value,
+                        continuous:document.scoreSearch.continuous,
+                        platoon:document.scoreSearch.platoon.value,
+                        monitor:document.scoreSearch.monitor.value,
+                        project:document.myScoreSearch.project.value
+                    },
+                    function(data){
+                        document.getElementById('myScoreDiv').innerHTML=data;
+                    });
+            });
+        });
+    </script>
 </head>
 <body>
 <?php include("usernav.php") ?>
@@ -48,5 +67,6 @@ if($rank==0)
     }
  ?>
 </div>
+<div id="myScoreDiv"></div>
 </body>
 </html>
