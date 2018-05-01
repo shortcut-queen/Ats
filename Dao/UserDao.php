@@ -14,37 +14,45 @@ use Ats\Conn\Conn;
 class UserDao
 {
     //增加用户
-    static function addUser($user_id, $user_name, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer){
+    static function addUser($user_id, $user_name, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer)
+    {
         $SQL_ADD_USER = "insert into ats_user(User_Id, User_Name,Brigade, Battalion, Continuous, Platoon, Monitor, Warrior, Officer)values($user_id,'$user_name',$brigade,$battalion,$continuous,$platoon,$monitor,$warrior,$officer)";
         Conn::init();
         $result = Conn::excute($SQL_ADD_USER);
         Conn::close();
         return $result;
     }
+
     //删除用户
-    static function deleteUser($user_id,$user_name){
+    static function deleteUser($user_id, $user_name)
+    {
         $SQL_DELETE_USER = "delete from ats_user where User_Id= $user_id and User_Name ='$user_name'";
         Conn::init();
         $result = Conn::excute($SQL_DELETE_USER);
         Conn::close();
         return $result;//返回true or false
     }
+
     //修改用户（名字，所属单位,是否长官）依赖：user_id
-    static function updateUser($user_id, $user_name,$brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer){
+    static function updateUser($user_id, $user_name, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer)
+    {
         $SQL_UPDATE_USER = "update ats_brigade set User_Name='$user_name',Brigade=$brigade ,Battalion = $battalion, Continuous = $continuous, Platoon= $platoon, Monitor=$monitor, Warrior=$warrior, Officer=$officer where User_Id= $user_id";
         Conn::init();
         $result = Conn::excute($SQL_UPDATE_USER);
         Conn::close();
         return $result;//返回true or false
     }
+
     //修改用户密码
-    static function updateUserPassword($user_id,$new_password){
+    static function updateUserPassword($user_id, $new_password)
+    {
         $SQL_UPDATE_USER_PASSWORD = "update ats_brigade set User_Password='$new_password' where User_Id= $user_id";
         Conn::init();
         $result = Conn::excute($SQL_UPDATE_USER_PASSWORD);
         Conn::close();
         return $result;//返回true or false
     }
+
     //查找用户所属等级及信息
     static function findUserinfo($user_id)
     {
@@ -64,6 +72,7 @@ class UserDao
         Conn::close();
         return $result;//返回记录集 or false
     }
+
     //查找指定用户存在否。依赖：user_id
     static function existUser($user_id)
     {
@@ -73,6 +82,7 @@ class UserDao
         Conn::close();
         return mysql_fetch_array($result)[0];//返回0 or 1
     }
+
     //登录查询
     static function loginUser($user_id, $user_password)
     {
@@ -104,14 +114,12 @@ class UserDao
         $project_unit_array=array();
         while ($row = mysql_fetch_array($result_project)) {
             $number[1]=$row[0];
-
             $result_score=self::myOneProjectScore($number);
-            if(mysql_fetch_array($result_score[0])[0]!=null){
+            if(mysql_num_rows($result_score[0])>=1){
                 array_push($project_unit_array,$row[2]);
                 array_push($project_name_array,$row[1]);
                 array_push($result, $result_score[0]);//将遍历所有项目的成绩存储
             }
-            #echo mysql_fetch_array($result_score[0])[0];
         }
         array_unshift($result,$project_unit_array);
         array_unshift($result,$project_name_array);
@@ -154,6 +162,7 @@ class UserDao
     //查询全部项目下属成绩
     static function allProjectScore($clear_number)
     {
+
         //查找已有的全部项目
         $SQL_FIND_PROJECT_NAME = "select Project_Id,Project_Name,Project_Unit from ats_project";
         Conn::init();
