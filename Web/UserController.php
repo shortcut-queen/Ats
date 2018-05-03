@@ -18,14 +18,16 @@ use Ats\Web\ResultShow;
 switch ($_POST['form_name']){
     case 'addUser':
         UserController::addUser();break;
-    case 'scoreSearch':{
-        UserController::selectLowDownScore();break;}
+    case 'scoreSearch':
+        UserController::selectLowDownScore();break;
     case 'myScoreSearch':
         UserController:: myScoreSearch();break;
     case 'scoreCompare':
         UserController::selectPiechart();break;
     case 'updateUserPassword':
         UserController::updateUserPassword();
+    case 'scoreTermSearch':
+        UserController::selectLinechart();
 }
 
 class UserController{
@@ -159,5 +161,46 @@ class UserController{
         }
         else
             $_SESSION['error'] = "原密码错误";
+    }
+//某段时间折线图
+    static function selectLinechart(){
+        include("../Service/UserService.php");
+        $user_id = $_SESSION['user_id'];
+        $date_start = $_POST['startDate'];
+        $date_end = $_POST['endDate'];
+        $project = $_POST['project'];
+        $battalion = $_POST['battalion'];
+        $continuous = $_POST['continuous'];
+        $platoon = $_POST['platoon'];
+        $monitor = $_POST['monitor'];
+        //返回用户的所属等级
+        $result = UserService::findUserinfo($user_id);
+        $number = array();
+        $row = mysql_fetch_array($result);
+        switch ($row[5]) {
+            case '1':
+                $number = array($date_start,$date_end,$project, $row[0], $battalion, $continuous, $platoon,$monitor);
+                break;
+            case '2':
+                $number = array($date_start,$date_end,$project, $row[0], $row[1], $continuous, $platoon,$monitor);
+                break;
+            case '3':
+                $number = array($date_start,$date_end,$project, $row[0], $row[1], $row[2], $platoon,$monitor);
+                break;
+            case '4':
+                $number = array($date_start,$date_end,$project, $row[0], $row[1], $row[2], $row[3],$monitor);
+                break;
+            case '5':
+                $number = array($date_start,$date_end,$project, $row[0], $row[1], $row[2], $row[3],$row[4]);
+                break;
+        }
+        //清理数组，删除NULL数据
+        $i = 7;
+        while ($number[$i] == "") {
+            $i--;
+        }
+        $new_number = array_slice($number, 0, $i+1);
+        $result = UserService::selectLineChart($new_number);
+        echo $result;
     }
 }

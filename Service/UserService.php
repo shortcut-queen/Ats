@@ -49,4 +49,8 @@ class UserService
     static function selectPieChart($new_number){
         return UserDao::selectPieChart($new_number);
     }
+    //查询成绩折线图
+    static function selectLineChart($line_number){
+        return UserDao::selectLineChart($line_number);
+    }
 }
