@@ -11,14 +11,18 @@ session_start();
 if(!isset($_SESSION['admin_name']))
     header('location:../Admin/admin.php');
 //引用类
-include("../Service/AdminService.php");
 use Ats\Service\AdminService;
+use Ats\Web\ResultShow;
 //判断提交表单的名称
 switch ($_POST['form_name']){
     case 'addAdmin':
         AdminController::addAdmin();break;
     case 'addUser':
         AdminController::addUser();break;
+    case 'updateAdminPassword':
+        AdminController::updateAdminPassword();break;
+    case 'searchAllAdmin':
+        AdminController::selectAllAdmin();
 }
 
 class AdminController
@@ -26,6 +30,7 @@ class AdminController
     //添加管理员
      static function addAdmin()
     {
+        include("../Service/AdminService.php");
         $admin_name = $_POST['admin_name'];
         $admin_type = $_POST['admin_type'];
         $result = AdminService::addAdmin($admin_name, $admin_type);
@@ -60,5 +65,30 @@ class AdminController
             $_SESSION['error'] = 'add user failed';
             header('location:../Admin/manage.php');//添加失败
         }
+    }
+    //修改管理员密码
+    static function updateAdminPassword(){
+        include("../Service/AdminService.php");
+        $admin_name=$_SESSION['admin_name'];
+        $old_password=$_POST['old_password'];
+        $new_password=$_POST['new_password'];
+        $result=AdminService::adminLogin($admin_name,$old_password);
+        echo $result;
+        if($result) {
+            $resultUpdate = AdminService::updateAdminPassword($admin_name, $new_password);
+            if ($resultUpdate)
+                $_SESSION['success'] = "修改密码成功";
+            else
+                $_SESSION['error'] = "修改密码失败";
+        }
+        else
+            $_SESSION['error'] = "原密码错误";
+    }
+    static function selectAllAdmin(){
+         include ('../Service/AdminService.php');
+         include ('ResultShow.php');
+         $result=AdminService::selectAllAdmin();
+         $echo_str=ResultShow::showAllAdmin($result);
+         echo $echo_str;
     }
 }

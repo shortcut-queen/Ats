@@ -11,21 +11,26 @@ use Ats\Service\ProjectService;
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>用户:<?php echo $_SESSION['user_name']; ?></title>
+    <title>个人成绩</title>
     <link rel="stylesheet" href="../Static/css/bootstrap.min.css">
     <script src="../Static/js/bootstrap.min.js"></script>
     <script src="../Static/js/jquery-3.2.1.js"></script>
     <script>
         $(document).ready(function(){
             $("#buttonSearch").click(function(){
-                $.post("../Web/UserController.php",
+                $.post(document.myScoreSearch.action,
                     {
                         form_name:document.myScoreSearch.form_name.value,
                         date:document.myScoreSearch.date.value,
                         project:document.myScoreSearch.project.value,
                     },
                     function(data){
-                        document.getElementById('table_name').innerHTML=document.myScoreSearch.project.value;
+                        if($("select[name='project'] option:selected").val()!="all_project") {
+                            document.getElementById('table_name').style.display='block';
+                            document.getElementById('table_name').innerHTML = $("select[name='project'] option:selected").text();
+                        }
+                        else
+                            document.getElementById('table_name').style.display='none';
                         document.getElementById('myScoreDiv').innerHTML=data;
                     });
             });
@@ -34,7 +39,7 @@ use Ats\Service\ProjectService;
 </head>
 <body>
 <?php include("usernav.php") ?>
-//查询成绩
+<div style="position: relative;width:100%;text-align:center;font-size:large;margin-top: 4%">我的成绩</div>
 <div style="position: relative;margin-top: 4%;text-align: center">
     <?php
         //查询所有项目名称
@@ -44,13 +49,13 @@ use Ats\Service\ProjectService;
         echo "<input class='form-control' type='date' name='date'/>";
         echo "<select class='form-control' name='project'><option value='all_project'>--项目--</option><option value='all_project'>全部</option>";
         while ($row=mysql_fetch_array($result))
-            echo "<option value='$row[0]'>$row[1]</option>";
+            echo "<option value='".$row['Project_Id']."'>".$row['Project_Name']."</option>";
         echo "</select>";
         echo "<button id='buttonSearch' class='btn btn-primary' type='button'>查询</button>";
         echo "</form>";
         ?>
 </div>
-<label id="table_name" style="position: relative;margin-top: 5%;"></label>
-<div id="myScoreDiv"></div>
+<label id="table_name" style="position: relative;margin-top: 5%;width: 100%;text-align: center;font-size: large"></label>
+<div id="myScoreDiv" style="margin-top: 3%;"></div>
 </body>
 </html>

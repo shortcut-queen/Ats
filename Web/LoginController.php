@@ -58,9 +58,11 @@ class LoginController
             $_SESSION['user_id'] = $user_id;
             $_SESSION['user_name'] = $result['User_Name'];
             $_SESSION['officer'] = $result['Officer'];
+            header('location:../Home/user.php');//登录成功
         }else {
             $_SESSION['error'] = '登录失败';
             header('location:../Home/index.php');//登录失败
         }
     }
+
 }

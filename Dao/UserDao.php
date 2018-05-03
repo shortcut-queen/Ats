@@ -197,7 +197,6 @@ class UserDao
         $len_new_number = count($new_number);
         $string = $whole_number[$len_new_number];
         $result_end = array();
-        $result_middle = array();
         //判断成绩值越大越好or越小越好
         Conn::init();
         $SQL_SCORE_STANDARD = "select Project_Great, Project_Good, Project_Qualified from ats_project where Project_Id =$new_number[1]";
@@ -206,6 +205,8 @@ class UserDao
         $unit =array();
         //循环遍历3个单位，返回各单位成绩优秀良好及格不及格率
         for($i = 1;$i<4;$i++){
+            //初始化$result_middle数组
+            $result_middle = array();
             //循环变换sql语句并查找
             for($k=0;$k<4;$k++){
                 //在数据中选择对应的判别式对sql语句进行补充

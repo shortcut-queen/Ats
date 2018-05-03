@@ -6,7 +6,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collape-1">
             <ul class="nav navbar-nav">
                 <li class="active" style="width: 200px">
-                    <a href="">军校训练管理系统</a>
+                    <a href="manage.php">军校训练管理系统</a>
                 </li>
                 <li class="dropdown" role="presentation" tyle="width: 200px">
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&emsp;用户管理&emsp;<span class="caret"></a>
@@ -54,8 +54,10 @@
                 </li>
                 <?php
                 if(intval($_SESSION['admin_type'])==0)
-                    echo" <li class='dropdown' role='presentation' tyle='width: 200px'><a href='' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>&emsp;管理员&emsp;&emsp;<span class='caret'></a><ul class='dropdown-menu'><li style='background-color: #46b8da;font-size: 18px;'><a href='alladmin.php'>所有管理员</a></li><li style='background-color: #46b8da;font-size: 18px;'><a href='addadmin.php'>添加管理员</a></li></ul></li>"
-                    ?>
+                    echo" <li class='dropdown' role='presentation' tyle='width: 200px'><a href='' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>&emsp;管理员&emsp;&emsp;<span class='caret'></a><ul class='dropdown-menu'><li style='background-color: #46b8da;font-size: 18px;'><a href='alladmin.php'>所有管理员</a></li><li style='background-color: #46b8da;font-size: 18px;'><a href='addadmin.php'>添加管理员</a></li></ul></li>";
+                else
+                    echo "<li><a href='password.php'>修改密码</a></li>";
+                ?>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li style="position:relative;margin-top:13px;margin-right: 10px;">

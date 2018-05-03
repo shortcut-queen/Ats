@@ -12,10 +12,13 @@ if(!isset($_SESSION['admin_name'])&&!isset($_SESSION['user_id']))
     header('location:../Admin/admin.php');
 //引用类
 use Ats\Service\ProjectService;
+use Ats\Web\ResultShow;
 //判断提交表单的名称
 switch ($_POST['form_name']){
     case 'addProject':
         ProjectController::addProject();break;
+    case 'searchAllProject':
+        ProjectController::selectAllProject();
 }
 
 class ProjectController
@@ -50,6 +53,10 @@ class ProjectController
 
     //查询所有项目名称
     static function selectAllProject(){
-        return ProjectService::selectAllProject();
+        include ("../Service/ProjectService.php");
+        include("ResultShow.php");
+        $result=ProjectService::selectAllProject();
+        $echo_str=ResultShow::showAllProject($result);
+        echo $echo_str;
     }
 }
