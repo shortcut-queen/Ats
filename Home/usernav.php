@@ -6,11 +6,11 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collape-1">
             <ul class="nav navbar-nav">
                 <li class="active" style="width: 200px">
-                    <a href="">军校训练管理系统</a>
+                    <a href="user.php">军校训练管理系统</a>
                 </li>
                 <?php
                 if(intval($_SESSION['officer'])!=0)
-                    echo "<li class='dropdown' role='presentation' tyle='width: 200px'><a href='' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>&emsp;成绩分析&emsp;<span class='caret'></a><ul class='dropdown-menu'><li style='background-color: #46b8da; font-size: 18px;'><a href='myscore.php'>个人成绩</a></li><li style='background-color: #46b8da; font-size: 18px;'><a href='score.php'>成绩查询</a></li><li style='background-color: #46b8da;font-size: 18px;'><a href=''>图表对比</a></li><li style='background-color: #46b8da;font-size: 18px;'><a href=''>折线分析</a></li></ul></li>";
+                    echo "<li class='dropdown' role='presentation' tyle='width: 200px'><a href='' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>&emsp;成绩分析&emsp;<span class='caret'></a><ul class='dropdown-menu'><li style='background-color: #46b8da; font-size: 18px;'><a href='myscore.php'>个人成绩</a></li><li style='background-color: #46b8da; font-size: 18px;'><a href='score.php'>成绩查询</a></li><li style='background-color: #46b8da;font-size: 18px;'><a href='scorecompare.php'>图表对比</a></li><li style='background-color: #46b8da;font-size: 18px;'><a href='scoreterm.php'>折线分析</a></li></ul></li>";
                 else
                     echo "<li><a href='myscore.php'>&emsp;个人成绩&emsp;</a></li>";
                 ?>

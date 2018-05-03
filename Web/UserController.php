@@ -29,48 +29,53 @@ switch ($_POST['form_name']){
     case 'updateUserPassword':
         UserController::updateUserPassword();
     case 'scoreTermSearch':
-        UserController::selectLinechart();
+        UserController::selectLineChart();break;
+    case 'topList':
+        UserController::longhubang();break;
 }
 
-class UserController{
+class UserController
+{
     //查询个人成绩
-    static function myScoreSearch(){
+    static function myScoreSearch()
+    {
         include("ResultShow.php");
         include("../Service/UserService.php");
         $date = $_POST['date'];
         $project = $_POST['project'];
         $user_id = $_SESSION['user_id'];
-        $number = array($date,$project,$user_id);
+        $number = array($date, $project, $user_id);
         $result = UserService::myScoreSearch($number);
-        $echo_str=ResultShow::myScoreShow($result);
+        $echo_str = ResultShow::myScoreShow($result);
         echo $echo_str;
     }
 
 
     //返回所要查询的字段数组
-    static function selectNumber($resultinfo,$date,$project,$battalion,$continuous,$platoon,$monitor)
+    static function selectNumber($resultinfo, $date, $project, $battalion, $continuous, $platoon, $monitor)
     {
         $number = array();
         $row = mysql_fetch_array($resultinfo);
         switch ($row[5]) {
             case '1':
-                $number = array($date, $project,$row[0],$battalion, $continuous, $platoon, $monitor );
+                $number = array($date, $project, $row[0], $battalion, $continuous, $platoon, $monitor);
                 break;
             case '2':
-                $number = array($date, $project,$row[0],$row[1],$continuous, $platoon, $monitor);
+                $number = array($date, $project, $row[0], $row[1], $continuous, $platoon, $monitor);
                 break;
             case '3':
-                $number = array("$date", "$project","$row[0]","$row[1]","$row[2]","$platoon", "$monitor");
+                $number = array("$date", "$project", "$row[0]", "$row[1]", "$row[2]", "$platoon", "$monitor");
                 break;
             case '4':
-                $number = array($date, $project,$row[0],$row[1],$row[2],$row[3],$monitor);
+                $number = array($date, $project, $row[0], $row[1], $row[2], $row[3], $monitor);
                 break;
             case '5':
-                $number = array($date, $project,$row[0],$row[1],$row[2],$row[3],$row[4]);
+                $number = array($date, $project, $row[0], $row[1], $row[2], $row[3], $row[4]);
                 break;
         }
         return $number;
     }
+
     //查询当前用户下属单位成绩
     static function selectLowDownScore()
     {
@@ -86,10 +91,10 @@ class UserController{
         //返回用户的所属信息
         $result_information = UserService::findUserinfo($user_id);
         //返回所要查询的字段数组
-        $number = self::selectNumber($result_information,$date,$project,$battalion,$continuous,$platoon,$monitor);
+        $number = self::selectNumber($result_information, $date, $project, $battalion, $continuous, $platoon, $monitor);
         //清理数组，删除NULL数据
         $i = 6;
-        while($number[$i]== ""){
+        while ($number[$i] == "") {
             $i--;
         }
         $clear_number = array_slice($number, 0, $i + 1);
@@ -99,7 +104,8 @@ class UserController{
     }
 
     //查询成绩饼状图
-    static function selectPiechart(){
+    static function selectPiechart()
+    {
         include("../Service/UserService.php");
         include("ResultShow.php");
         $user_id = $_SESSION['user_id'];
@@ -114,37 +120,36 @@ class UserController{
         $row = mysql_fetch_array($result);
         switch ($row[5]) {
             case '1':
-                $number = array($date, $project,$row[0],$battalion, $continuous, $platoon );
+                $number = array($date, $project, $row[0], $battalion, $continuous, $platoon);
                 break;
             case '2':
-                $number = array($date, $project,$row[0],$row[1],$continuous, $platoon);
+                $number = array($date, $project, $row[0], $row[1], $continuous, $platoon);
                 break;
             case '3':
-                $number = array($date, $project,$row[0],$row[1],$row[2],$platoon);
+                $number = array($date, $project, $row[0], $row[1], $row[2], $platoon);
                 break;
             case '4':
-                $number = array($date, $project,$row[0],$row[1],$row[2],$row[3]);
+                $number = array($date, $project, $row[0], $row[1], $row[2], $row[3]);
                 break;
         }
         //查看用户选择何种等级进行对比，过滤数组
-        $i =2;
-        while($number[$i]!=''){
+        $i = 2;
+        while ($number[$i] != '') {
             $i++;
-            if($i>5)
+            if ($i > 5)
                 break;
         }
-        $new_number = array_slice($number, 0,$i);
+        $new_number = array_slice($number, 0, $i);
         $result = UserService::selectPieChart($new_number);
         //echo mysql_fetch_array($result[0])[0];
-        #echo count($result);
         //演示输出
         for ($i = 0; $i < 3; $i++) {
             echo "oo:" . $result[0][$i];
             echo "</br>";
-            for ($j = $i*4;$j<($i+1)*4;$j++){
-                echo $result[$i+1][$j];
+            for ($j = 0; $j < 4; $j++) {
+                echo $result[$i + 1][$j];
                 echo "</br>";
-        }
+            }
             echo "</br></br>";
         }
     }
@@ -165,24 +170,26 @@ class UserController{
     }
 
     //修改用户密码
-    static function updateUserPassword(){
+    static function updateUserPassword()
+    {
         include("../Service/UserService.php");
-        $user_id=$_SESSION['user_id'];
-        $old_password=$_POST['old_password'];
-        $new_password=$_POST['new_password'];
-        $result=UserService::userLogin($user_id,$old_password);
-        if($result) {
+        $user_id = $_SESSION['user_id'];
+        $old_password = $_POST['old_password'];
+        $new_password = $_POST['new_password'];
+        $result = UserService::userLogin($user_id, $old_password);
+        if ($result) {
             $resultUpdate = UserService::updateUserPassword($user_id, $new_password);
             if ($resultUpdate)
                 $_SESSION['success'] = "修改密码成功";
             else
                 $_SESSION['error'] = "修改密码失败";
-        }
-        else
+        } else
             $_SESSION['error'] = "原密码错误";
     }
-//某段时间折线图
-    static function selectLinechart(){
+
+    //某段时间折线图
+    static function selectLineChart()
+    {
         include("../Service/UserService.php");
         $user_id = $_SESSION['user_id'];
         $date_start = $_POST['startDate'];
@@ -198,19 +205,19 @@ class UserController{
         $row = mysql_fetch_array($result);
         switch ($row[5]) {
             case '1':
-                $number = array($date_start,$date_end,$project, $row[0], $battalion, $continuous, $platoon,$monitor);
+                $number = array($date_start, $date_end, $project, $row[0], $battalion, $continuous, $platoon, $monitor);
                 break;
             case '2':
-                $number = array($date_start,$date_end,$project, $row[0], $row[1], $continuous, $platoon,$monitor);
+                $number = array($date_start, $date_end, $project, $row[0], $row[1], $continuous, $platoon, $monitor);
                 break;
             case '3':
-                $number = array($date_start,$date_end,$project, $row[0], $row[1], $row[2], $platoon,$monitor);
+                $number = array($date_start, $date_end, $project, $row[0], $row[1], $row[2], $platoon, $monitor);
                 break;
             case '4':
-                $number = array($date_start,$date_end,$project, $row[0], $row[1], $row[2], $row[3],$monitor);
+                $number = array($date_start, $date_end, $project, $row[0], $row[1], $row[2], $row[3], $monitor);
                 break;
             case '5':
-                $number = array($date_start,$date_end,$project, $row[0], $row[1], $row[2], $row[3],$row[4]);
+                $number = array($date_start, $date_end, $project, $row[0], $row[1], $row[2], $row[3], $row[4]);
                 break;
         }
         //清理数组，删除NULL数据
@@ -218,8 +225,28 @@ class UserController{
         while ($number[$i] == "") {
             $i--;
         }
-        $new_number = array_slice($number, 0, $i+1);
+        $new_number = array_slice($number, 0, $i + 1);
         $result = UserService::selectLineChart($new_number);
-        echo $result;
+        for ($i = 0; $i < count($result[0]); $i++) {
+            echo "date:" . $result[0][$i];
+            echo "</br>";
+            echo "score:" . $result[$i + 1];
+            echo "</br>";
+//        }
+        }
+    }
+    //龙虎榜
+    static function longhubang(){
+        include('../Service/UserService.php');
+        $result = UserService::longhubang();
+
+        for($i=0;$i<count($result[0]);$i++){
+            echo "Project_Name:" . $result[0][$i] ." Project_Unit:".$result[1][$i];
+            echo "</br>";
+            while($row=mysql_fetch_array($result[$i+2])){
+                echo "User_Id:" .$row[0]." Train_Score:" .$row[1]." Train_Date:" .$row[2] ;
+                echo "</br>";
+            }
+        }
     }
 }
