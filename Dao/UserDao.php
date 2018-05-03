@@ -39,7 +39,7 @@ class UserDao
     }
     //修改用户密码
     static function updateUserPassword($user_id,$new_password){
-        $SQL_UPDATE_USER_PASSWORD = "update ats_brigade set User_Password='$new_password' where User_Id= $user_id";
+        $SQL_UPDATE_USER_PASSWORD = "update ats_user set User_Password='$new_password' where User_Id= $user_id";
         Conn::init();
         $result = Conn::excute($SQL_UPDATE_USER_PASSWORD);
         Conn::close();
