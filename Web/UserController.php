@@ -32,41 +32,43 @@ switch ($_POST['form_name']){
         UserController::selectLinechart();
 }
 
-class UserController{
+class UserController
+{
     //查询个人成绩
-    static function myScoreSearch(){
+    static function myScoreSearch()
+    {
         include("ResultShow.php");
         include("../Service/UserService.php");
         $date = $_POST['date'];
         $project = $_POST['project'];
         $user_id = $_SESSION['user_id'];
-        $number = array($date,$project,$user_id);
+        $number = array($date, $project, $user_id);
         $result = UserService::myScoreSearch($number);
-        $echo_str=ResultShow::myScoreShow();
+        $echo_str = ResultShow::myScoreShow($result);
         echo $echo_str;
     }
 
 
     //返回所要查询的字段数组
-    static function selectNumber($resultinfo,$date,$project,$battalion,$continuous,$platoon,$monitor)
+    static function selectNumber($resultinfo, $date, $project, $battalion, $continuous, $platoon, $monitor)
     {
         $number = array();
         $row = mysql_fetch_array($resultinfo);
         switch ($row[5]) {
             case '1':
-                $number = array($date, $project,$row[0],$battalion, $continuous, $platoon, $monitor );
+                $number = array($date, $project, $row[0], $battalion, $continuous, $platoon, $monitor);
                 break;
             case '2':
-                $number = array($date, $project,$row[0],$row[1],$continuous, $platoon, $monitor);
+                $number = array($date, $project, $row[0], $row[1], $continuous, $platoon, $monitor);
                 break;
             case '3':
-                $number = array("$date", "$project","$row[0]","$row[1]","$row[2]","$platoon", "$monitor");
+                $number = array("$date", "$project", "$row[0]", "$row[1]", "$row[2]", "$platoon", "$monitor");
                 break;
             case '4':
-                $number = array($date, $project,$row[0],$row[1],$row[2],$row[3],$monitor);
+                $number = array($date, $project, $row[0], $row[1], $row[2], $row[3], $monitor);
                 break;
             case '5':
-                $number = array($date, $project,$row[0],$row[1],$row[2],$row[3],$row[4]);
+                $number = array($date, $project, $row[0], $row[1], $row[2], $row[3], $row[4]);
                 break;
         }
         return $number;
@@ -87,10 +89,10 @@ class UserController{
         //返回用户的所属信息
         $result_information = UserService::findUserinfo($user_id);
         //返回所要查询的字段数组
-        $number = self::selectNumber($result_information,$date,$project,$battalion,$continuous,$platoon,$monitor);
+        $number = self::selectNumber($result_information, $date, $project, $battalion, $continuous, $platoon, $monitor);
         //清理数组，删除NULL数据
         $i = 6;
-        while($number[$i]== ""){
+        while ($number[$i] == "") {
             $i--;
         }
         $clear_number = array_slice($number, 0, $i + 1);
@@ -115,26 +117,26 @@ class UserController{
         $row = mysql_fetch_array($result);
         switch ($row[5]) {
             case '1':
-                $number = array($date, $project,$row[0],$battalion, $continuous, $platoon );
+                $number = array($date, $project, $row[0], $battalion, $continuous, $platoon);
                 break;
             case '2':
-                $number = array($date, $project,$row[0],$row[1],$continuous, $platoon);
+                $number = array($date, $project, $row[0], $row[1], $continuous, $platoon);
                 break;
             case '3':
-                $number = array($date, $project,$row[0],$row[1],$row[2],$platoon);
+                $number = array($date, $project, $row[0], $row[1], $row[2], $platoon);
                 break;
             case '4':
-                $number = array($date, $project,$row[0],$row[1],$row[2],$row[3]);
+                $number = array($date, $project, $row[0], $row[1], $row[2], $row[3]);
                 break;
         }
         //查看用户选择何种等级进行对比，过滤数组
-        $i =2;
-        while($number[$i]!=' '){
+        $i = 2;
+        while ($number[$i] != '') {
             $i++;
-            if($i>5)
+            if ($i > 5)
                 break;
         }
-        $new_number = array_slice($number, 0,$i);
+        $new_number = array_slice($number, 0, $i);
         $result = UserService::selectPieChart($new_number);
         //echo mysql_fetch_array($result[0])[0];
         #echo count($result);
@@ -222,6 +224,6 @@ class UserController{
         }
         $new_number = array_slice($number, 0, $i+1);
         $result = UserService::selectLineChart($new_number);
-        echo $result;
+        echo $result[0][0];
     }
 }
