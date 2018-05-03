@@ -197,24 +197,100 @@ class UserDao
         $len_new_number = count($new_number);
         $string = $whole_number[$len_new_number];
         $result_end = array();
+        $result_middle = array();
+        //判断成绩值越大越好or越小越好
         Conn::init();
+        $SQL_SCORE_STANDARD = "select Project_Great, Project_Good, Project_Qualified from ats_project where Project_Id =$new_number[1]";
+        $scoreStandard = Conn::query($SQL_SCORE_STANDARD);
+        $row = mysql_fetch_array($scoreStandard);
         $unit =array();
+        //循环遍历3个单位，返回各单位成绩优秀良好及格不及格率
         for($i = 1;$i<4;$i++){
-            $SQL_PIE_CHARTPART = "select Train_Score from ats_project_$new_number[1] where Train_Date = '$new_number[0]' and User_Id in(select User_Id from ats_user where ";
-            for($j =2;$j<$len_new_number;$j++){
-               $SQL_ASSIGMENT = "$whole_number[$j]='$new_number[$j]'";
-               $SQL_PIE_CHARTPART = "$SQL_PIE_CHARTPART" . "$SQL_ASSIGMENT"." "."and" ." ";
+            //循环变换sql语句并查找
+            for($k=0;$k<4;$k++){
+                //在数据中选择对应的判别式对sql语句进行补充
+                if ($row[0]<$row[1]) {
+                    $sum = ["< $row[0]","between $row[0] and $row[1]","between $row[1] and $row[2]","> $row[2]"];
+                    $SQL_PIE_CHARTPART = "select count(*) from ats_project_$new_number[1] where Train_Score $sum[$k] and Train_Date = '$new_number[0]' and User_Id in(select User_Id from ats_user where ";
+                }else {
+                    $sum1 = [" > $row[0]","between $row[1] and $row[0]","between $row[2] and $row[1]","< $row[2]"];
+                    $SQL_PIE_CHARTPART = "select count(*) from ats_project_$new_number[1] where Train_Score $sum1[$k] and Train_Date = '$new_number[0]' and User_Id in(select User_Id from ats_user where ";
+                }
+                //循环插入条件语句
+                for($j =2;$j<$len_new_number;$j++){
+                    $SQL_ASSIGMENT = "$whole_number[$j]='$new_number[$j]'";
+                    $SQL_PIE_CHARTPART = "$SQL_PIE_CHARTPART" . "$SQL_ASSIGMENT"." "."and" ." ";
+                }
+                $SQL_PIE_CHART = "$SQL_PIE_CHARTPART" . "$string = '$i'".")";
+                $result=Conn::query($SQL_PIE_CHART);
+                //判断是否查到数据，否则插入0
+                if(mysql_num_rows($result)>=1){
+                    array_push($result_middle,mysql_fetch_array($result)[0]);
+                }else{
+                    array_push($result_middle,int(0));
+                }
             }
-            $SQL_PIE_CHART = "$SQL_PIE_CHARTPART" . "$string = '$i'".")";
-            $result=Conn::query($SQL_PIE_CHART);
-            if(mysql_num_rows($result)>=1){
-                array_push($result_end,$result);
-                array_push($unit,$i);
-            }
+            array_push($result_end,$result_middle);
+            array_push($unit,$i);
         }
         array_unshift($result_end,$unit);
         Conn::close();
         return $result_end;
     }
+    //获取制定日期段内每一天日期
+    static function getDateFromRange($startdate,$enddate){
+        $s_timestamp = strtotime($startdate);
+        $e_timestamp = strtotime($enddate);
+        //计算日期段内有多少天
+        $days = ($e_timestamp-$s_timestamp)/86400+1;
+        //保存每天日期
+        $date= array();
+        for($i=0;$i<$days;$i++){
+            $date[]=date('Y-m-d',$s_timestamp+(86400*$i));
+        }
+        return $date;
+    }
+    //查找单项成绩折线图
+    static function selectLineChart($line_number){
+        $whole_number = array("Date_start","Date_end", "project", "Brigade", "Battalion", "Continuous", "Platoon", "Monitor");
+        $date = self::getDateFromRange($line_number[0],$line_number[1]);
+        $len_line_number = count($line_number)-1;
+        $result_score = array();
+        //判断成绩值越大越好or越小越好
+        Conn::init();
+        $SQL_SCORE_STANDARD = "select Project_Great, Project_Good, Project_Qualified from ats_project where Project_Id =$line_number[2]";
+        $scoreStandard = Conn::query($SQL_SCORE_STANDARD);
+        $row = mysql_fetch_array($scoreStandard);
+        $echo_sql_str="";//返回数据查询语句
+        for($i=0;$i<count($date);$i++){
+            for($k=0;$k<4;$k++){
+                //在数据中选择对应的判别式对sql语句进行补充
+                if ($row[0]<$row[1]) {
+                    $sum = ["< $row[0]","between $row[0] and $row[1]","between $row[1] and $row[2]","> $row[2]"];
+                    $SQL_LINE_CHARTPART = "select count(*) from ats_project_$line_number[2] where Train_Score $sum[$k] and Train_Date = '$date[$i]' and User_Id in(select User_Id from ats_user where ";
+                }else {
+                    $sum1 = [" > $row[0]","between $row[1] and $row[0]","between $row[2] and $row[1]","< $row[2]"];
+                    $SQL_LINE_CHARTPART = "select count(*) from ats_project_$line_number[2] where Train_Score $sum1[$k] and Train_Date = '$date[$i]' and User_Id in(select User_Id from ats_user where ";
+                }
+                //循环插入条件语句
+                for($j =3;$j<$len_line_number;$j++){
+                    $SQL_ASSIGMENT = "$whole_number[$j]='$line_number[$j]'";
+                    $SQL_LINE_CHARTPART = "$SQL_LINE_CHARTPART" . "$SQL_ASSIGMENT"." "."and" ." ";
+                }
+                $SQL_LINE_CHART = "$SQL_LINE_CHARTPART" . "$whole_number[$len_line_number] = $line_number[$len_line_number]".")";
+                #$echo_sql_str=$echo_sql_str.$SQL_LINE_CHART.'</br>';
+                $result=Conn::query($SQL_LINE_CHART);
+                if(mysql_num_rows($result)>=1){
+                    array_push($result_score_middle, mysql_fetch_array($result)[0]);}
+                    else{
+                    array_push($result_score_middle, int(0));
+                }
+            }
+            array_push($result_score,$result_score_middle);
 
+
+
+        }
+        return $echo_sql_str;
+    }
 }
