@@ -197,6 +197,7 @@ class UserDao
         $len_new_number = count($new_number);
         $string = $whole_number[$len_new_number];
         $result_end = array();
+
         //判断成绩值越大越好or越小越好
         Conn::init();
         $SQL_SCORE_STANDARD = "select Project_Great, Project_Good, Project_Qualified from ats_project where Project_Id =$new_number[1]";
@@ -254,9 +255,11 @@ class UserDao
     //查找单项成绩折线图
     static function selectLineChart($line_number){
         $whole_number = array("Date_start","Date_end", "project", "Brigade", "Battalion", "Continuous", "Platoon", "Monitor");
+        //返回两个日期间的所有日期
         $date = self::getDateFromRange($line_number[0],$line_number[1]);
         $len_line_number = count($line_number)-1;
         $result_score = array();
+        $selectdate =array();
         //判断成绩值越大越好or越小越好
         Conn::init();
         $SQL_SCORE_STANDARD = "select Project_Great, Project_Good, Project_Qualified from ats_project where Project_Id =$line_number[2]";
@@ -287,11 +290,64 @@ class UserDao
                     array_push($result_score_middle, int(0));
                 }
             }
-            array_push($result_score,$result_score_middle);
-
-
-
+            #echo count($result_score_middle);
+            $sumscore = 0;
+            for ($m = 0; $m < 4; $m++) {
+                $sumscore = $sumscore + $result_score_middle[$m];
+            }
+            //计算优秀良好及格率
+            if ($sumscore > 0) {
+                array_push($selectdate, $date[$i]);
+                $greatpercent = $result_score_middle[0];
+                $goodpercent = $result_score_middle[0] + $result_score_middle[1];
+                $qualifypercent = $result_score_middle[0] + $result_score_middle[1] + $result_score_middle[2];
+                $resultscore = ($greatpercent * 45 + $goodpercent * 35 + $qualifypercent * 20) / $sumscore;
+                array_push($result_score, $resultscore);
+            }
         }
-        return $echo_sql_str;
+        array_unshift($result_score,$selectdate);
+        return $result_score;
+    }
+    //龙虎榜
+    static function longhubang(){
+        $projectId = array();
+        $projectName = array();
+        $projectUnit = array();
+        $resultall= array();
+        $resultunit = array();
+        $resultname = array();
+        //查找已有的全部项目
+        $SQL_FIND_PROJECT_NAME = "select Project_Id,Project_Name,Project_Unit from ats_project";
+        Conn::init();
+        $result_project = Conn::query($SQL_FIND_PROJECT_NAME);
+
+
+
+        while($row = mysql_fetch_array($result_project)){
+            array_push($projectId, $row[0]);
+            array_push($projectName, $row[1]);
+            array_push($projectUnit,$row[2]);
+        }
+        for($i=0;$i<count($projectId);$i++){
+            $SQL_SCORE_STANDARD = "select Project_Great, Project_Good, Project_Qualified from ats_project where Project_Id =$projectId[$i]";
+            $scoreStandard = Conn::query($SQL_SCORE_STANDARD);
+            $row1 = mysql_fetch_array($scoreStandard);
+            if(intval($row1[0])<intval($row1[1])){
+                $SQL_SCORE_MIN =  "select ats_user.User_Id, ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select min(Train_Score) from ats_project_$projectId[$i])";
+                $result_score = Conn::query($SQL_SCORE_MIN);
+            }else{
+                $SQL_SCORE_MAX =  "select ats_user.User_Id, ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select max(Train_Score) from ats_project_$projectId[$i])";
+                $result_score = Conn::query($SQL_SCORE_MAX);
+            }
+            if(mysql_num_rows($result_score)==0)
+                continue;
+            array_push($resultall,$result_score);
+            array_push($resultname,$projectName[$i]);
+            array_push($resultunit,$projectUnit[$i]);
+        }
+        array_unshift($resultall,$resultunit);
+        array_unshift($resultall,$resultname);
+        Conn::close();
+        return $resultall;
     }
 }

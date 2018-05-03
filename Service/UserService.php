@@ -53,4 +53,8 @@ class UserService
     static function selectLineChart($line_number){
         return UserDao::selectLineChart($line_number);
     }
+    //龙虎榜
+    static function longhubang(){
+        return UserDao::longhubang();
+    }
 }

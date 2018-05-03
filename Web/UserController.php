@@ -27,7 +27,9 @@ switch ($_POST['form_name']){
     case 'updateUserPassword':
         UserController::updateUserPassword();
     case 'scoreTermSearch':
-        UserController::selectLinechart();
+        UserController::selectLineChart();break;
+    case 'topList':
+        UserController::longhubang();break;
     case 'selectMyInfo':
         UserController::selectMyInfo();
 }
@@ -105,8 +107,7 @@ class UserController{
     }
 
     //查询成绩饼状图
-    static function selectPiechart()
-    {
+    static function selectPiechart(){
         include("../Service/UserService.php");
         include("ResultShow.php");
         $user_id = $_SESSION['user_id'];
@@ -121,36 +122,37 @@ class UserController{
         $row = mysql_fetch_array($result);
         switch ($row[5]) {
             case '1':
-                $number = array($date, $project, $row[0], $battalion, $continuous, $platoon);
+                $number = array($date, $project,$row[0],$battalion, $continuous, $platoon );
                 break;
             case '2':
-                $number = array($date, $project, $row[0], $row[1], $continuous, $platoon);
+                $number = array($date, $project,$row[0],$row[1],$continuous, $platoon);
                 break;
             case '3':
-                $number = array($date, $project, $row[0], $row[1], $row[2], $platoon);
+                $number = array($date, $project,$row[0],$row[1],$row[2],$platoon);
                 break;
             case '4':
-                $number = array($date, $project, $row[0], $row[1], $row[2], $row[3]);
+                $number = array($date, $project,$row[0],$row[1],$row[2],$row[3]);
                 break;
         }
         //查看用户选择何种等级进行对比，过滤数组
         $i = 2;
-        while ($number[$i]!= '') {
+        while ($number[$i] != '') {
             $i++;
-            if ($i > 5)
+            if($i>5)
                 break;
         }
-        $new_number = array_slice($number, 0, $i);
+        $new_number = array_slice($number, 0,$i);
         $result = UserService::selectPieChart($new_number);
         $echo_str=ResultShow::showPie($result);
         echo $echo_str;
-//        for($i =0;$i<3;$i++){
-//            echo "oo:" . $result[0][$i];
-//            echo"</br>";
-//            for($j=0;$j<4;$j++){
-//                echo $result[$i+1][$j];
+        //演示输出
+//        for ($i=1; $i<count($result); $i++) {
+//            echo "oo:". $result[0][$i-1];
+//            while($row=mysql_fetch_array($result[$i])){
+//                echo "score:".$row[0];
 //                echo "</br>";
-//            }
+//        }
+//            echo "</br></br>";
 //        }
     }
     //修改用户密码
@@ -209,6 +211,26 @@ class UserController{
         }
         $new_number = array_slice($number, 0, $i+1);
         $result = UserService::selectLineChart($new_number);
-        echo $result;
+        for ($i = 0; $i < count($result[0]); $i++) {
+            echo "date:" . $result[0][$i];
+            echo "</br>";
+            echo "score:" . $result[$i + 1];
+            echo "</br>";
+//        }
+        }
+    }
+    //龙虎榜
+    static function longhubang(){
+        include('../Service/UserService.php');
+        $result = UserService::longhubang();
+
+        for($i=0;$i<count($result[0]);$i++){
+            echo "Project_Name:" . $result[0][$i] ." Project_Unit:".$result[1][$i];
+            echo "</br>";
+            while($row=mysql_fetch_array($result[$i+2])){
+                echo "User_Id:" .$row[0]." Train_Score:" .$row[1]." Train_Date:" .$row[2] ;
+                echo "</br>";
+            }
+        }
     }
 }
