@@ -27,4 +27,8 @@ class AdminService{
     static function updateAdminPassword($admin_name,$new_password){
         return AdminDao::updateAdminPassword($admin_name,$new_password);
     }
+    //查找所有管理员
+    static function selectAllAdmin(){
+        return AdminDao::selectAllAdmin();
+    }
 }

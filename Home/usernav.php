@@ -15,7 +15,7 @@
                     echo "<li><a href='myscore.php'>&emsp;个人成绩&emsp;</a></li>";
                 ?>
                 <li>
-                    <a href="" >&emsp;资源库&emsp;</a>
+                    <a href="resource.php" >&emsp;资源库&emsp;</a>
                 </li>
                 <li class="dropdown" role="presentation" tyle="width: 200px">
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&emsp;个人资料&emsp;<span class="caret"></a>

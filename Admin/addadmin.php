@@ -18,10 +18,10 @@ if(!isset($_SESSION['admin_name']))
 
 <?php
 //显示提示信息
-echo "<div style='position: relative;top: 10%;'>";
+echo "<div style='position: relative;margin-top: 3.5%;'>";
 if(isset($_SESSION['success']))
     echo "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>".$_SESSION['success']."</div>";
-if(isset($_SESSION['errror']))
+if(isset($_SESSION['error']))
     echo "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>".$_SESSION['error']."</div>";
 echo "</div>";
 unset($_SESSION['success']);

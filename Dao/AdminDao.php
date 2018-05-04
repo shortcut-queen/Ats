@@ -31,8 +31,8 @@ class AdminDao{
     }
 
     //查找所有管理员
-    static function selectAdmin(){
-        $SQL_SELECT_ADMIN="select Admin_Name,Admin_type from ats_admin";
+    static function selectAllAdmin(){
+        $SQL_SELECT_ADMIN="select Admin_Name from ats_admin where Admin_Type=1";
         Conn::init();
         $result=Conn::query($SQL_SELECT_ADMIN);
         Conn::close();

@@ -7,12 +7,23 @@ if(isset($_SESSION['user_id']))
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>用户登录</title>
     <link rel="stylesheet" href="../Static/css/bootstrap.min.css">
     <script src="../Static/js/bootstrap.min.js"></script>
     <script src="../Static/js/jquery-3.2.1.js"></script>
 </head>
 <body>
+<?php
+//显示提示信息
+echo "<div style='position: relative;'>";
+if(isset($_SESSION['success']))
+    echo "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>".$_SESSION['success']."</div>";
+if(isset($_SESSION['error']))
+    echo "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>".$_SESSION['error']."</div>";
+echo "</div>";
+unset($_SESSION['success']);
+unset($_SESSION['error']);
+?>
 <div style="position: fixed; margin-top: 10%;margin-left: 60%; width:300px;height:250px;background-color: #46b8da; border-radius: 10px;">
     <label class="h4"style="background-color:#2e6da4;width: 100%;height:15%;margin-top: 0px;border-radius:10px 10px 0px 0px;padding-top: 10px;padding-left: 10px;">用户登录</label cl>
     <form class="form-horizontal" style="width: 80%;height: 100%;margin-left: 10%;"  name="userLogin" action="../Web/LoginController.php" method="post">

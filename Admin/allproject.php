@@ -14,12 +14,12 @@ if(!isset($_SESSION['admin_name']))
     <script src="../Static/js/jquery-3.2.1.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-            $.post("../Web/AdminController.php",
+            $.post("../Web/ProjectController.php",
                 {
-                    form_name:"searchAllAdmin"
+                    form_name:"searchAllProject"
                 },
                 function(data){
-                    document.getElementById('allAdmin').innerHTML=data;
+                    document.getElementById('allProject').innerHTML=data;
                 });
         });
     </script>
@@ -38,7 +38,7 @@ echo "</div>";
 unset($_SESSION['success']);
 unset($_SESSION['error']);
 ?>
-<div id="allAdmin" style="position: relative;margin-top: 8%;width:100%;">
+<div id="allProject" style="margin-top: 10%">
 
 </div>
 </body>

@@ -11,25 +11,28 @@ use Ats\Service\ProjectService;
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>用户:<?php echo $_SESSION['user_name']; ?></title>
+    <title>下属成绩</title>
     <link rel="stylesheet" href="../Static/css/bootstrap.min.css">
     <script src="../Static/js/bootstrap.min.js"></script>
     <script src="../Static/js/jquery-3.2.1.js"></script>
     <script>
         $(document).ready(function(){
             $("#buttonSearch").click(function(){
-                $.post("../Web/UserController.php",
+                $.post(document.scoreSearch.action,
                     {
                         form_name:document.scoreSearch.form_name.value,
                         date:document.scoreSearch.date.value,
                         battalion:document.scoreSearch.battalion.value,
-                        continuous:document.scoreSearch.continuous,
+                        continuous:document.scoreSearch.continuous.value,
                         platoon:document.scoreSearch.platoon.value,
                         monitor:document.scoreSearch.monitor.value,
-                        project:document.myScoreSearch.project.value
+                        project:document.scoreSearch.project.value
                     },
                     function(data){
-                        document.getElementById('myScoreDiv').innerHTML=data;
+                        var project_value=document.scoreSearch.project.value;
+                        if(project_value!="all_project")
+                            document.getElementById('table_name').innerHTML=document.scoreSearch.project.value;
+                        document.getElementById('scoreDiv').innerHTML=data;
                     });
             });
         });
@@ -37,7 +40,7 @@ use Ats\Service\ProjectService;
 </head>
 <body>
 <?php include("usernav.php") ?>
-//查询成绩
+<div style="position: relative;width:100%;text-align:center;font-size:large;margin-top: 4%">下属成绩查询</div>
 <div style="position: relative;margin-top: 4%;text-align: center">
 <?php
 $rank=intval($_SESSION['officer']);
@@ -60,13 +63,14 @@ if($rank==0)
             echo "<select class='form-control' name=".$option_names[$i][0]."><option value=''>--".$option_names[$i][1]."--</option><option value=''>全部</option><option value='1'>".$option_names[$i][2]."</option><option value='2'>".$option_names[$i][3]."</option><option value='3'>".$option_names[$i][4]."</option></select>";
         echo "<select class='form-control' name='project'><option value='all_project'>--项目--</option><option value='all_project'>全部</option>";
         while ($row=mysql_fetch_array($result))
-            echo "<option value='$row[0]'>$row[1]</option>";
+            echo "<option value='".$row['Project_Id']."'>".$row['Project_Name']."</option>";
         echo "</select>";
-        echo "<button class='btn btn-primary' type='submit'>查询</button>";
+        echo "<button id='buttonSearch' class='btn btn-primary' type='button'>查询</button>";
         echo "</form>";
     }
  ?>
 </div>
-<div id="myScoreDiv"></div>
+<label id="table_name" style="position: relative;margin-top: 5%;"></label>
+<div id="scoreDiv"></div>
 </body>
 </html>

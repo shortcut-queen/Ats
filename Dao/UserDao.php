@@ -207,6 +207,7 @@ class UserDao
         $unit =array();
         //循环遍历3个单位，返回各单位成绩优秀良好及格不及格率
         for($i = 1;$i<4;$i++){
+            //初始化$result_middle数组
             $result_middle = array();
             //循环变换sql语句并查找
             for($k=0;$k<4;$k++){
@@ -232,12 +233,10 @@ class UserDao
                     array_push($result_middle,int(0));
                 }
             }
-
             array_push($result_end,$result_middle);
             array_push($unit,$i);
         }
         array_unshift($result_end,$unit);
-        echo count($result_end[2]);
         Conn::close();
         return $result_end;
     }
@@ -322,7 +321,6 @@ class UserDao
         $SQL_FIND_PROJECT_NAME = "select Project_Id,Project_Name,Project_Unit from ats_project";
         Conn::init();
         $result_project = Conn::query($SQL_FIND_PROJECT_NAME);
-
         while($row = mysql_fetch_array($result_project)){
             array_push($projectId, $row[0]);
             array_push($projectName, $row[1]);
@@ -333,10 +331,10 @@ class UserDao
             $scoreStandard = Conn::query($SQL_SCORE_STANDARD);
             $row1 = mysql_fetch_array($scoreStandard);
             if(intval($row1[0])<intval($row1[1])){
-                $SQL_SCORE_MIN =  "select ats_user.User_Id, ats_user.User_name,ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select min(Train_Score) from ats_project_$projectId[$i])";
+                $SQL_SCORE_MIN =  "select ats_user.User_Id, ats_user.User_Name,ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select min(Train_Score) from ats_project_$projectId[$i])";
                 $result_score = Conn::query($SQL_SCORE_MIN);
             }else{
-                $SQL_SCORE_MAX =  "select ats_user.User_Id, ats_user.User_name,ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select max(Train_Score) from ats_project_$projectId[$i])";
+                $SQL_SCORE_MAX =  "select ats_user.User_Id, ats_user.User_Name,ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select max(Train_Score) from ats_project_$projectId[$i])";
                 $result_score = Conn::query($SQL_SCORE_MAX);
             }
             if(mysql_num_rows($result_score)==0)
