@@ -354,7 +354,7 @@ class UserDao
         $resultScore = array();
         Conn::init();
         for($i=0;$i<count($date);$i++){
-            $SQL_PER_LINECHART = " select Train_Score, Train_Date from ats_project_$number[2] where User_Id = $number[3] and Train_Date = '$date[$i]' ";
+            $SQL_PER_LINECHART = " select Train_Date,Train_Score from ats_project_$number[2] where User_Id = $number[3] and Train_Date = '$date[$i]' ";
             $result_score =Conn::query($SQL_PER_LINECHART);
             if(mysql_num_rows($result_score)>=1){
                 array_push($resultScore,$result_score);
