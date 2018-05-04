@@ -56,14 +56,14 @@ class UserDao
         return $result;
     }
 
-    //查找所有用户
-    static function selectUser($paramater)
+    //查找用户
+    static function findUser($parameter)
     {
-        $SQL_SELECT_USER = "select User_Id,User_Name from  ats_user";
+        $SQL_SELECT_USER = "SELECT * FROM ats_user WHERE User_Id like  '%$parameter%' or User_Name like '%$parameter%' ";
         Conn::init();
         $result = Conn::query($SQL_SELECT_USER);
         Conn::close();
-        return $result;//返回记录集 or false
+        return $result;
     }
     //查找指定用户存在否。依赖：user_id
     static function existUser($user_id)
