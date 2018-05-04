@@ -66,7 +66,10 @@ class ResultShow
     }
     //显示折线图
     static function showLine($result){
-
+        $echo_str="";
+        for($i=0;$i<count($result[0]);$i++)
+            $echo_str=$echo_str."<input type='hidden' id='date".$i."' name='".$result[0][$i]."' value='".$result[$i+1]."'>";
+        return $echo_str;
     }
     //显示所有项目
     static function showAllProject($result){
@@ -103,5 +106,22 @@ class ResultShow
         $echo_str=$echo_str."</table>";
         return $echo_str;
     }
-
+    static function showTopList($result){
+        $echo_str =  "<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><thead><tr><th style='text-align: center'>项目</th><th style='text-align: center'>项目单位</th><th style='text-align: center'>编号</th><th style='text-align: center'>姓名</th><th style='text-align: center'>日期</th><th style='text-align: center'>所属部队</th><th style='text-align: center'>成绩</th></tr></thead>";
+        for ($i = 0; $i < count($result[0]); $i++) {
+             while ($row = mysql_fetch_array($result[$i+2])) {
+                $army_str="";
+                $army=array(array('一','二','三'),array('旅','营','连','排','班'));
+                for($j=0;$j<5;$j++) {
+                    if(intval($row[$j+4])==0)
+                        break;
+                    else
+                        $army_str=$army_str.$army[0][intval($row[$j+4])-1].$army[1][$j];
+                }
+                $echo_str = $echo_str . "<tr><td>".$result[0][$i]."</td><td>".$result[1][$i]."</td><td>".$row['User_Id']."</td><td>".$row['User_Name']."</td><td>".$row['Train_Date']."</td><td>$army_str</td><td>".$row['Train_Score']."</td></tr>";
+            }
+        }
+        $echo_str = $echo_str . "</table>";
+        return $echo_str;
+    }
 }

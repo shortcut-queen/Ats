@@ -145,15 +145,6 @@ class UserController{
         $result = UserService::selectPieChart($new_number);
         $echo_str=ResultShow::showPie($result);
         echo $echo_str;
-        //演示输出
-//        for ($i=1; $i<count($result); $i++) {
-//            echo "oo:". $result[0][$i-1];
-//            while($row=mysql_fetch_array($result[$i])){
-//                echo "score:".$row[0];
-//                echo "</br>";
-//        }
-//            echo "</br></br>";
-//        }
     }
     //修改用户密码
     static function updateUserPassword(){
@@ -175,6 +166,7 @@ class UserController{
 //某段时间折线图
     static function selectLinechart(){
         include("../Service/UserService.php");
+        include ("ResultShow.php");
         $user_id = $_SESSION['user_id'];
         $date_start = $_POST['startDate'];
         $date_end = $_POST['endDate'];
@@ -211,26 +203,15 @@ class UserController{
         }
         $new_number = array_slice($number, 0, $i+1);
         $result = UserService::selectLineChart($new_number);
-        for ($i = 0; $i < count($result[0]); $i++) {
-            echo "date:" . $result[0][$i];
-            echo "</br>";
-            echo "score:" . $result[$i + 1];
-            echo "</br>";
-//        }
-        }
+        $echo_str=ResultShow::showLine($result);
+        echo $echo_str;
     }
     //龙虎榜
     static function longhubang(){
         include('../Service/UserService.php');
+        include ("ResultShow.php");
         $result = UserService::longhubang();
-
-        for($i=0;$i<count($result[0]);$i++){
-            echo "Project_Name:" . $result[0][$i] ." Project_Unit:".$result[1][$i];
-            echo "</br>";
-            while($row=mysql_fetch_array($result[$i+2])){
-                echo "User_Id:" .$row[0]." Train_Score:" .$row[1]." Train_Date:" .$row[2] ;
-                echo "</br>";
-            }
-        }
+        $echo_str=ResultShow::showTopList($result);
+        echo $echo_str;
     }
 }

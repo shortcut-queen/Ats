@@ -7,6 +7,7 @@
  */
 
 namespace Ats\Dao;
+ini_set('date.timezone','Asia/Shanghai');
 //引用类
 include("../Conn/conn.php");
 use Ats\Conn\Conn;
@@ -239,7 +240,7 @@ class UserDao
         Conn::close();
         return $result_end;
     }
-    //获取制定日期段内每一天日期
+//获取制定日期段内每一天日期
     static function getDateFromRange($startdate,$enddate){
         $s_timestamp = strtotime($startdate);
         $e_timestamp = strtotime($enddate);
@@ -265,28 +266,28 @@ class UserDao
         $SQL_SCORE_STANDARD = "select Project_Great, Project_Good, Project_Qualified from ats_project where Project_Id =$line_number[2]";
         $scoreStandard = Conn::query($SQL_SCORE_STANDARD);
         $row = mysql_fetch_array($scoreStandard);
-        $echo_sql_str="";//返回数据查询语句
-        for($i=0;$i<count($date);$i++){
-            for($k=0;$k<4;$k++){
+        for($i=0;$i<count($date);$i++) {
+            $result_score_middle = array();
+            for ($k = 0; $k < 4; $k++) {
                 //在数据中选择对应的判别式对sql语句进行补充
-                if ($row[0]<$row[1]) {
-                    $sum = ["< $row[0]","between $row[0] and $row[1]","between $row[1] and $row[2]","> $row[2]"];
+                if ($row[0] < $row[1]) {
+                    $sum = ["< $row[0]", "between $row[0] and $row[1]", "between $row[1] and $row[2]", "> $row[2]"];
                     $SQL_LINE_CHARTPART = "select count(*) from ats_project_$line_number[2] where Train_Score $sum[$k] and Train_Date = '$date[$i]' and User_Id in(select User_Id from ats_user where ";
-                }else {
-                    $sum1 = [" > $row[0]","between $row[1] and $row[0]","between $row[2] and $row[1]","< $row[2]"];
+                } else {
+                    $sum1 = [" > $row[0]", "between $row[1] and $row[0]", "between $row[2] and $row[1]", "< $row[2]"];
                     $SQL_LINE_CHARTPART = "select count(*) from ats_project_$line_number[2] where Train_Score $sum1[$k] and Train_Date = '$date[$i]' and User_Id in(select User_Id from ats_user where ";
                 }
                 //循环插入条件语句
-                for($j =3;$j<$len_line_number;$j++){
+                for ($j = 3; $j < $len_line_number; $j++) {
                     $SQL_ASSIGMENT = "$whole_number[$j]='$line_number[$j]'";
-                    $SQL_LINE_CHARTPART = "$SQL_LINE_CHARTPART" . "$SQL_ASSIGMENT"." "."and" ." ";
+                    $SQL_LINE_CHARTPART = "$SQL_LINE_CHARTPART" . "$SQL_ASSIGMENT" . " " . "and" . " ";
                 }
-                $SQL_LINE_CHART = "$SQL_LINE_CHARTPART" . "$whole_number[$len_line_number] = $line_number[$len_line_number]".")";
+                $SQL_LINE_CHART = "$SQL_LINE_CHARTPART" . "$whole_number[$len_line_number] = $line_number[$len_line_number]" . ")";
                 #$echo_sql_str=$echo_sql_str.$SQL_LINE_CHART.'</br>';
-                $result=Conn::query($SQL_LINE_CHART);
-                if(mysql_num_rows($result)>=1){
-                    array_push($result_score_middle, mysql_fetch_array($result)[0]);}
-                    else{
+                $result = Conn::query($SQL_LINE_CHART);
+                if (mysql_num_rows($result)>= 1) {
+                    array_push($result_score_middle, mysql_fetch_array($result)[0]);
+                } else {
                     array_push($result_score_middle, int(0));
                 }
             }
@@ -308,6 +309,7 @@ class UserDao
         array_unshift($result_score,$selectdate);
         return $result_score;
     }
+
     //龙虎榜
     static function longhubang(){
         $projectId = array();
@@ -333,10 +335,10 @@ class UserDao
             $scoreStandard = Conn::query($SQL_SCORE_STANDARD);
             $row1 = mysql_fetch_array($scoreStandard);
             if(intval($row1[0])<intval($row1[1])){
-                $SQL_SCORE_MIN =  "select ats_user.User_Id, ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select min(Train_Score) from ats_project_$projectId[$i])";
+                $SQL_SCORE_MIN =  "select ats_user.User_Id, ats_user.User_Name,ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select min(Train_Score) from ats_project_$projectId[$i])";
                 $result_score = Conn::query($SQL_SCORE_MIN);
             }else{
-                $SQL_SCORE_MAX =  "select ats_user.User_Id, ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select max(Train_Score) from ats_project_$projectId[$i])";
+                $SQL_SCORE_MAX =  "select ats_user.User_Id, ats_user.User_Name,ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select max(Train_Score) from ats_project_$projectId[$i])";
                 $result_score = Conn::query($SQL_SCORE_MAX);
             }
             if(mysql_num_rows($result_score)==0)
