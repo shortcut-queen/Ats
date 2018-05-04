@@ -57,7 +57,7 @@ class UserDao
     }
 
     //查找所有用户
-    static function selectUser()
+    static function selectUser($paramater)
     {
         $SQL_SELECT_USER = "select User_Id,User_Name from  ats_user";
         Conn::init();
