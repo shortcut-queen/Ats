@@ -8,6 +8,7 @@
 
 namespace Ats\Dao;
 //引用类
+ini_set('date.timezone','Asia/Shanghai');
 include("../Conn/conn.php");
 use Ats\Conn\Conn;
 //对用户的操作
@@ -332,10 +333,10 @@ class UserDao
             $scoreStandard = Conn::query($SQL_SCORE_STANDARD);
             $row1 = mysql_fetch_array($scoreStandard);
             if(intval($row1[0])<intval($row1[1])){
-                $SQL_SCORE_MIN =  "select ats_user.User_Id, ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select min(Train_Score) from ats_project_$projectId[$i])";
+                $SQL_SCORE_MIN =  "select ats_user.User_Id, ats_user.User_name,ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select min(Train_Score) from ats_project_$projectId[$i])";
                 $result_score = Conn::query($SQL_SCORE_MIN);
             }else{
-                $SQL_SCORE_MAX =  "select ats_user.User_Id, ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select max(Train_Score) from ats_project_$projectId[$i])";
+                $SQL_SCORE_MAX =  "select ats_user.User_Id, ats_user.User_name,ats_project_$projectId[$i].Train_Score, ats_project_$projectId[$i].Train_Date, ats_user.Brigade, ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor from ats_user,ats_project_$projectId[$i] where ats_user.User_Id = ats_project_$projectId[$i].User_Id and Train_Score = (select max(Train_Score) from ats_project_$projectId[$i])";
                 $result_score = Conn::query($SQL_SCORE_MAX);
             }
             if(mysql_num_rows($result_score)==0)
@@ -348,5 +349,19 @@ class UserDao
         array_unshift($resultall,$resultname);
         Conn::close();
         return $resultall;
+    }
+    //个人成绩折线图
+    static function personalLineChart($number){
+        $date = self::getDateFromRange($number[0],$number[1]);
+        $resultScore = array();
+        Conn::init();
+        for($i=0;$i<count($date);$i++){
+            $SQL_PER_LINECHART = " select Train_Score, Train_Date from ats_project_$number[2] where User_Id = $number[3] and Train_Date = '$date[$i]' ";
+            $result_score =Conn::query($SQL_PER_LINECHART);
+            if(mysql_num_rows($result_score)>=1){
+                array_push($resultScore,$result_score);
+            }
+        }
+        return $resultScore;
     }
 }
