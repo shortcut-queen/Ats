@@ -12,6 +12,7 @@ if(!isset($_SESSION['admin_name']))
     header('location:../Admin/admin.php');
 //引用类
 use Ats\Service\AdminService;
+use Ats\Service\UserService;
 use Ats\Web\ResultShow;
 //判断提交表单的名称
 switch ($_POST['form_name']){
@@ -90,5 +91,11 @@ class AdminController
          $result=AdminService::selectAllAdmin();
          $echo_str=ResultShow::showAllAdmin($result);
          echo $echo_str;
+    }
+    //查找用户
+    static function findUser(){
+         include ('../Service/UserService.php');
+         $parameter = $_POST['$parameter'];
+         $result = UserService::findUser($parameter);
     }
 }

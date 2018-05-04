@@ -32,6 +32,8 @@ switch ($_POST['form_name']){
         UserController::longhubang();break;
     case 'selectMyInfo':
         UserController::selectMyInfo();
+    case 'myScoreLine':
+        UserController::personalLineChart();break;
 }
 
 class UserController{
@@ -223,6 +225,11 @@ class UserController{
         $project = $_POST['project'];
         $number = array($date_start,$date_end,$project,$user_id);
         $result = UserService::personalLineChart($number);
-        
+        for($i=0;$i<count($result);$i++){
+            while($row = mysql_fetch_array($result[$i])){
+                echo "date:".$row[0]."score:".$row[1];
+            }
+            echo "</br>";
+        }
     }
 }
