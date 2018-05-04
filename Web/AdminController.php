@@ -23,7 +23,9 @@ switch ($_POST['form_name']){
     case 'updateAdminPassword':
         AdminController::updateAdminPassword();break;
     case 'searchAllAdmin':
-        AdminController::selectAllAdmin();
+        AdminController::selectAllAdmin();break;
+    case 'queryUser':
+        AdminController::findUser();break;
 }
 
 class AdminController
@@ -95,7 +97,8 @@ class AdminController
     //查找用户
     static function findUser(){
          include ('../Service/UserService.php');
-         $parameter = $_POST['$parameter'];
+         $parameter = $_POST['query_info'];
          $result = UserService::findUser($parameter);
+         echo mysql_fetch_array($result)[0];
     }
 }

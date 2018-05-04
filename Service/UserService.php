@@ -62,4 +62,8 @@ class UserService
     static function personalLineChart($number){
         return UserDao::personalLineChart($number);
     }
+    //查找用户
+    static function findUser($parameter){
+        return UserDao::findUser($parameter);
+    }
 }
