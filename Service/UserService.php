@@ -57,4 +57,8 @@ class UserService
     static function longhubang(){
         return UserDao::longhubang();
     }
+    //个人成绩折线图
+    static function personalLineChart($number){
+        return UserDao::personalLineChart($number);
+    }
 }

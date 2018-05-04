@@ -7,8 +7,8 @@
  */
 
 namespace Ats\Dao;
-ini_set('date.timezone','Asia/Shanghai');
 //引用类
+ini_set('date.timezone','Asia/Shanghai');
 include("../Conn/conn.php");
 use Ats\Conn\Conn;
 //对用户的操作
@@ -240,7 +240,7 @@ class UserDao
         Conn::close();
         return $result_end;
     }
-//获取制定日期段内每一天日期
+    //获取制定日期段内每一天日期
     static function getDateFromRange($startdate,$enddate){
         $s_timestamp = strtotime($startdate);
         $e_timestamp = strtotime($enddate);
@@ -309,7 +309,6 @@ class UserDao
         array_unshift($result_score,$selectdate);
         return $result_score;
     }
-
     //龙虎榜
     static function longhubang(){
         $projectId = array();
@@ -322,9 +321,6 @@ class UserDao
         $SQL_FIND_PROJECT_NAME = "select Project_Id,Project_Name,Project_Unit from ats_project";
         Conn::init();
         $result_project = Conn::query($SQL_FIND_PROJECT_NAME);
-
-
-
         while($row = mysql_fetch_array($result_project)){
             array_push($projectId, $row[0]);
             array_push($projectName, $row[1]);
@@ -351,5 +347,19 @@ class UserDao
         array_unshift($resultall,$resultname);
         Conn::close();
         return $resultall;
+    }
+    //个人成绩折线图
+    static function personalLineChart($number){
+        $date = self::getDateFromRange($number[0],$number[1]);
+        $resultScore = array();
+        Conn::init();
+        for($i=0;$i<count($date);$i++){
+            $SQL_PER_LINECHART = " select Train_Score, Train_Date from ats_project_$number[2] where User_Id = $number[3] and Train_Date = '$date[$i]' ";
+            $result_score =Conn::query($SQL_PER_LINECHART);
+            if(mysql_num_rows($result_score)>=1){
+                array_push($resultScore,$result_score);
+            }
+        }
+        return $resultScore;
     }
 }

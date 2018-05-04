@@ -214,4 +214,15 @@ class UserController{
         $echo_str=ResultShow::showTopList($result);
         echo $echo_str;
     }
+    //个人成绩折线图
+    static function personalLineChart(){
+        include("../Service/UserService.php");
+        $user_id = $_SESSION['user_id'];
+        $date_start = $_POST['startDate'];
+        $date_end = $_POST['endDate'];
+        $project = $_POST['project'];
+        $number = array($date_start,$date_end,$project,$user_id);
+        $result = UserService::personalLineChart($number);
+        
+    }
 }
