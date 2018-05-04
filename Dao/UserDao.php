@@ -56,14 +56,14 @@ class UserDao
         return $result;
     }
 
-    //查找所有用户
-    static function selectUser()
+    //查找用户
+    static function findUser($parameter)
     {
-        $SQL_SELECT_USER = "select User_Id,User_Name from  ats_user";
+        $SQL_SELECT_USER = "SELECT * FROM ats_user WHERE User_Id like  '%$parameter%' or User_Name like '%$parameter%' ";
         Conn::init();
         $result = Conn::query($SQL_SELECT_USER);
         Conn::close();
-        return $result;//返回记录集 or false
+        return $result;
     }
     //查找指定用户存在否。依赖：user_id
     static function existUser($user_id)
@@ -354,7 +354,7 @@ class UserDao
         $resultScore = array();
         Conn::init();
         for($i=0;$i<count($date);$i++){
-            $SQL_PER_LINECHART = " select Train_Score, Train_Date from ats_project_$number[2] where User_Id = $number[3] and Train_Date = '$date[$i]' ";
+            $SQL_PER_LINECHART = " select Train_Date, Train_Score  from ats_project_$number[2] where User_Id = $number[3] and Train_Date = '$date[$i]' ";
             $result_score =Conn::query($SQL_PER_LINECHART);
             if(mysql_num_rows($result_score)>=1){
                 array_push($resultScore,$result_score);
