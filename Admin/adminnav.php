@@ -12,7 +12,7 @@
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&emsp;用户管理&emsp;<span class="caret"></a>
                     <ul class="dropdown-menu">
                         <li style="background-color: #46b8da; font-size: 18px;">
-                            <a href="selectuser.php">查询用户</a>
+                            <a href="queryuser.php">查询用户</a>
                         </li>
                         <li style="background-color: #46b8da;font-size: 18px;">
                             <a href="adduser.php">增加用户</a>
