@@ -22,8 +22,8 @@ class ProjectDao
         return $result;
     }
     //删除训练项目
-    static function deleteProject($project_name){
-        $SQL_DELETE_PROJECT="delete from ats_project where Project_Name='$project_name'";
+    static function deleteProject($project_id){
+        $SQL_DELETE_PROJECT="delete from ats_project where Project_Name='$project_id'";
         Conn::init();
         $result=Conn::excute($SQL_DELETE_PROJECT);
         Conn::close();
@@ -56,6 +56,22 @@ class ProjectDao
         $SQL_SELECT_ALL_PROJECT="select * from ats_project";
         Conn::init();
         $result=Conn::excute($SQL_SELECT_ALL_PROJECT);
+        Conn::close();
+        return $result;
+    }
+    //查询指定项目
+    static function selectProject($project_id){
+        $SQL_SELECT_ALL_PROJECT="select * from ats_project where Project_Id=$project_id";
+        Conn::init();
+        $result=Conn::excute($SQL_SELECT_ALL_PROJECT);
+        Conn::close();
+        return $result;
+    }
+    //修改项目
+    static  function updateProject($project_id,$project_name,$project_unit,$project_great,$project_good,$project_qualified){
+        $SQL_UPDATE_PROJECT="update ats_project set Project_Name='$project_name',Project_Unit='$project_unit',Project_Great=$project_great,Project_Good=$project_good,Project_Qualified=$project_qualified where Project_Id=$project_id";
+        Conn::init();
+        $result=Conn::excute($SQL_UPDATE_PROJECT);
         Conn::close();
         return $result;
     }

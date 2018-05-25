@@ -48,7 +48,7 @@
                             <a href="">所有资源</a>
                         </li>
                         <li style="background-color: #46b8da;font-size: 18px;">
-                            <a href="">上传资源</a>
+                            <a href="uploadresource.php">上传资源</a>
                         </li>
                     </ul>
                 </li>

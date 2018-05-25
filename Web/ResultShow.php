@@ -36,18 +36,34 @@ class ResultShow
     {
 
         if (count($result) == 1) {
-            $echo_str = "<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><thead ><tr><th style='text-align: center'>编号</th><th style='text-align: center'>姓名</th><th style='text-align: center'>旅级</th><th style='text-align: center'>营级</th><th style='text-align: center'>连级</th><th style='text-align: center'>排级</th><th style='text-align: center'>班级</th><th style='text-align: center'>成绩</th></tr></thead>";
+            $echo_str = "<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><thead ><tr><th style='text-align: center'>编号</th><th style='text-align: center'>姓名</th><th style='text-align: center'>所属部队</th><th style='text-align: center'>成绩</th></tr></thead>";
             while ($row = mysql_fetch_array($result[0])) {
-                $echo_str = $echo_str . "<tr><td>$row[0]</td><td>$row[1]</td><td>$row[2]</td><td>$row[3]</td><td>$row[4]</td><td>$row[5]</td><td>$row[6]</td><td>$row[7]</td></tr>";
+                $army_str="";
+                $army=array(array('一','二','三'),array('旅','营','连','排','班'));
+                for($j=0;$j<5;$j++) {
+                    if(intval($row[$j+2])==0)
+                        break;
+                    else
+                        $army_str=$army_str.$army[0][intval($row[$j+2])-1].$army[1][$j];
+                }
+                $echo_str = $echo_str . "<tr><td>$row[0]</td><td>$row[1]</td><td>$army_str</td><td>$row[7]</td></tr>";
             }
             $echo_str = $echo_str . "</table></br>";
             return $echo_str;
         } else {
             $echo_str = "";
             for ($i = 2; $i < count($result); $i++) {
-                $echo_str = $echo_str . "<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><caption style='text-align:center;font-size: 18px'><b>" . $result[0][$i - 2] . "&emsp;单位:" . $result[1][$i - 2] . "</b></caption><thead ><tr><th style='text-align: center'>编号</th><th style='text-align: center'>姓名</th><th style='text-align: center'>旅级</th><th style='text-align: center'>营级</th><th style='text-align: center'>连级</th><th style='text-align: center'>排级</th><th style='text-align: center'>班级</th><th style='text-align: center'>成绩</th></tr></thead>";
+                $echo_str = $echo_str . "<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><caption style='text-align:center;font-size: 18px'><b>" . $result[0][$i - 2] . "&emsp;单位:" . $result[1][$i - 2] . "</b></caption><thead ><tr><th style='text-align: center'>编号</th><th style='text-align: center'>姓名</th><th style='text-align: center'>所属部队</th><th style='text-align: center'>成绩</th></tr></thead>";
                 while ($row = mysql_fetch_array($result[$i])) {
-                    $echo_str = $echo_str . "<tr><td>$row[0]</td><td>$row[1]</td><td>$row[2]</td><td>$row[3]</td><td>$row[4]</td><td>$row[5]</td><td>$row[6]</td><td>$row[7]</td></tr>";
+                    $army_str="";
+                    $army=array(array('一','二','三'),array('旅','营','连','排','班'));
+                    for($j=0;$j<5;$j++) {
+                        if(intval($row[$j+2])==0)
+                            break;
+                        else
+                            $army_str=$army_str.$army[0][intval($row[$j+2])-1].$army[1][$j];
+                    }
+                    $echo_str = $echo_str . "<tr><td>$row[0]</td><td>$row[1]</td><td>$army_str</td><td>$row[7]</td></tr>";
                 }
                 $echo_str = $echo_str . "</table></br>";
             }
@@ -71,11 +87,20 @@ class ResultShow
             $echo_str=$echo_str."<input type='hidden' id='date".$i."' name='".$result[0][$i]."' value='".$result[$i+1]."'>";
         return $echo_str;
     }
+    //显示个人折线图
+    static function showMyLine($result){
+        $echo_str="";
+        for($i=0;$i<count($result);$i++) {
+            $row=mysql_fetch_array($result[$i]);
+            $echo_str = $echo_str . "<input type='hidden' id='date" . $i . "' name='" . $row['Train_Date'] . "' value='" . $row['Train_Score'] . "'>";
+        }
+        return $echo_str;
+    }
     //显示所有项目
     static function showAllProject($result){
         $echo_str="<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><thead ><tr><th style='text-align: center'>序号</th><th style='text-align: center'>项目名称</th><th style='text-align: center'>单位</th><th style='text-align: center'>优秀</th><th style='text-align: center'>良好</th><th style='text-align: center'>及格</th><th style='text-align: center'>编辑</th><th style='text-align: center'>删除</th></tr></thead>";
         while($row=mysql_fetch_array($result))
-            $echo_str=$echo_str."<tr><td>".$row['Project_Id']."</td><td>".$row['Project_Name']."</td><td>".$row['Project_Unit']."</td><td>".$row['Project_Great']."</td><td>".$row['Project_Good']."</td><td>".$row['Project_Qualified']."</td><td><a href='../Web/EditProject.php?project_id=".$row['Project_Id']."'><button class='btn btn-group-sm btn-primary' type='button'>编辑</button></a></td><td><a href='../Web/DeleteProject.php?project_id=".$row['Project_Id']."'><button class='btn btn-group-sm btn-danger' type='button'>删除</button></a></td></tr>";
+            $echo_str=$echo_str."<tr><td>".$row['Project_Id']."</td><td>".$row['Project_Name']."</td><td>".$row['Project_Unit']."</td><td>".$row['Project_Great']."</td><td>".$row['Project_Good']."</td><td>".$row['Project_Qualified']."</td><td><a href='../Admin/EditProject.php?project_id=".$row['Project_Id']."'><button class='btn btn-group-sm btn-primary' type='button'>编辑</button></a></td><td><a href='../Admin/DeleteProject.php?project_id=".$row['Project_Id']."'><button class='btn btn-group-sm btn-danger' type='button'>删除</button></a></td></tr>";
         $echo_str=$echo_str."</table>";
         return $echo_str;
     }
@@ -84,7 +109,7 @@ class ResultShow
         $echo_str="<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><thead ><tr><th style='text-align: center'>序号</th><th style='text-align: center'>管理员姓名</th><th style='text-align: center'>删除</th></tr></thead>";
         $i=1;
         while($row=mysql_fetch_array($result)){
-            $echo_str=$echo_str."<tr><td>$i</td><td>".$row['Admin_Name']."</td><td><a href='../Web/DeleteAdmin.php?admin_name=".$row['Admin_Name']."'><button class='btn btn-group-sm btn-danger' type='button'>删除</button></a></td></tr>";
+            $echo_str=$echo_str."<tr><td>$i</td><td>".$row['Admin_Name']."</td><td><a href='../Admin/DeleteAdmin.php?admin_name=".$row['Admin_Name']."'><button class='btn btn-group-sm btn-danger' type='button'>删除</button></a></td></tr>";
             $i++;
         }
         $echo_str=$echo_str."</table>";
@@ -106,6 +131,7 @@ class ResultShow
         $echo_str=$echo_str."</table>";
         return $echo_str;
     }
+    //显示龙虎榜
     static function showTopList($result){
         $echo_str =  "<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><thead><tr><th style='text-align: center'>项目</th><th style='text-align: center'>项目单位</th><th style='text-align: center'>编号</th><th style='text-align: center'>姓名</th><th style='text-align: center'>日期</th><th style='text-align: center'>所属部队</th><th style='text-align: center'>成绩</th></tr></thead>";
         for ($i = 0; $i < count($result[0]); $i++) {
@@ -122,6 +148,23 @@ class ResultShow
             }
         }
         $echo_str = $echo_str . "</table>";
+        return $echo_str;
+    }
+    //显示查询到的用户信息
+    static function showFoundUser($result){
+        $echo_str="<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><thead ><tr><th style='text-align: center'>编号</th><th style='text-align: center'>姓名</th><th style='text-align: center'>所属部队</th><th style='text-align: center'>等级</th><th style='text-align: center'>编辑</th><th style='text-align: center'>删除</th></tr></thead>";
+        while($row=mysql_fetch_array($result)) {
+            $army_str="";
+            $army=array(array('一','二','三'),array('旅','营','连','排','班'),array('战士','旅长','营长','连长','排长','班长'));
+            for($j=0;$j<5;$j++) {
+                if(intval($row[$j+3])==0)
+                    break;
+                else
+                    $army_str=$army_str.$army[0][intval($row[$j+3])-1].$army[1][$j];
+            }
+            $echo_str = $echo_str . "<tr><td>" . $row['User_Id'] . "</td><td>" . $row['User_Name'] . "</td><td>" . $army_str . "</td><td>" . $army[2][intval($row['Officer'])] . "</td><td><a href='../Admin/EditUser.php?user_id=" . $row['User_Id'] . "'><button class='btn btn-group-sm btn-primary' type='button'>编辑</button></a></td><td><a href='../Admin/DeleteUser.php?user_id=" . $row['User_Id'] . "'><button class='btn btn-group-sm btn-danger' type='button'>删除</button></a></td></tr>";
+        }
+        $echo_str=$echo_str."</table>";
         return $echo_str;
     }
 }

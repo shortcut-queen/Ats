@@ -18,7 +18,9 @@ switch ($_POST['form_name']){
     case 'addProject':
         ProjectController::addProject();break;
     case 'searchAllProject':
-        ProjectController::selectAllProject();
+        ProjectController::selectAllProject();break;
+    case 'editProject':
+        ProjectController::editProject();break;
 }
 
 class ProjectController
@@ -38,18 +40,17 @@ class ProjectController
             $result_project = ProjectService::createProjectTable($project_name);
             if ($result_project) {
                 $_SESSION['success'] = '添加项目成功';
-                header('location:../Admin/addproject.php');
+                header('location:../Admin/allproject.php');
             } else {
                 ProjectService::deleteProject($project_name);
                 $_SESSION['error'] = '添加项目失败';
-                header('location:../Admin/manage.php');
+                header('location:../Admin/addproject.php');
             }
         } else {
             $_SESSION['error'] = '添加项目失败';
-            header('location:../Admin/manage.php');
+            header('location:../Admin/addproject.php');
         }
     }
-    //删除训练项目
 
     //查询所有项目名称
     static function selectAllProject(){
@@ -58,5 +59,22 @@ class ProjectController
         $result=ProjectService::selectAllProject();
         $echo_str=ResultShow::showAllProject($result);
         echo $echo_str;
+    }
+    //修改训练项目
+    static function editProject(){
+        include ("../Service/ProjectService.php");
+        $project_id=$_POST['project_id'];
+        $project_name=$_POST['project_name'];
+        $project_unit=$_POST['project_unit'];
+        $project_great=$_POST['project_great'];
+        $project_good=$_POST['project_good'];
+        $project_qualified=$_POST['project_qualified'];
+        echo $project_id.$project_name;
+        $result=ProjectService::updateProject($project_id,$project_name,$project_unit,$project_great,$project_good,$project_qualified);
+        if($result)
+            $_SESSION['success']='修改成功';
+        else
+            $_SESSION['success']='修改失败';
+        header('location:../Admin/editproject.php?project_id='.$project_id);
     }
 }

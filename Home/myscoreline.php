@@ -17,50 +17,60 @@ use Ats\Service\ProjectService;
     <script>
         $(document).ready(function(){
             $("#buttonSearch").click(function(){
-                $.post(document.myScoreLine.action,
-                    {
-                        form_name:document.myScoreLine.form_name.value,
-                        startDate:document.myScoreLine.startDate.value,
-                        endDate:document.myScoreLine.endDate.value,
-                        project:document.scoreTermSearch.project.value
-                    },
-                    function(data){
-                        document.getElementById('myScoreDiv').innerHTML=data;
-                        var dataList={date:[],score:[]};
-                        for(var i=0;;i++){
-                            var date_input=document.getElementById('date'+i);
-                            if(date_input==null)
-                                break;
-                            else {
-                                dataList['date'][i]=date_input.name;
-                                dataList['score'][i]=parseInt(date_input.value);
+                if(document.myScoreLine.startDate.value=="" || document.myScoreLine.endDate.value=="")
+                    $("#error_show").text("请选择开始和终止择日期!");
+                else if(document.myScoreLine.project.value=="all_project")
+                    $("#error_show").text("请选择具体项目!");
+                else if(document.myScoreLine.startDate.value>=document.myScoreLine.endDate.value)
+                    $("#error_show").text("请规范选择开始和终止时间!");
+                else {
+                    $("#error_show").text("");
+                    $("#table_name").text($("select[name='project'] option:selected").text());
+                    $.post(document.myScoreLine.action,
+                        {
+                            form_name: document.myScoreLine.form_name.value,
+                            startDate: document.myScoreLine.startDate.value,
+                            endDate: document.myScoreLine.endDate.value,
+                            project: document.myScoreLine.project.value
+                        },
+                        function (data) {
+                            document.getElementById('myScoreDiv').innerHTML = data;
+                            var dataList = {date: [], score: []};
+                            for (var i = 0; ; i++) {
+                                var date_input = document.getElementById('date' + i);
+                                if (date_input == null)
+                                    break;
+                                else {
+                                    dataList['date'][i] = date_input.name;
+                                    dataList['score'][i] = parseInt(date_input.value);
+                                }
                             }
-                        }
-                        var myChart = echarts.init(document.getElementById('showLine'));
-                        option = {
-                            xAxis: {
-                                type: 'category',
-                                boundaryGap: false,
-                                data: dataList['date']
-                            },
-                            yAxis: {
-                                type: 'value'
-                            },
-                            series: [{
-                                data: dataList['score'],
-                                type: 'line',
-                                areaStyle: {}
-                            }]
-                        };
-                        myChart.setOption(option);
-                    });
+                            var myChart = echarts.init(document.getElementById('showLine'));
+                            option = {
+                                xAxis: {
+                                    type: 'category',
+                                    boundaryGap: false,
+                                    data: dataList['date']
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [{
+                                    data: dataList['score'],
+                                    type: 'line',
+                                    areaStyle: {}
+                                }]
+                            };
+                            myChart.setOption(option);
+                        });
+                }
             });
         });
     </script>
 </head>
 <body>
 <?php include("usernav.php") ?>
-<div style="position: relative;width:100%;text-align:center;font-size:large;margin-top: 4%">折线分析</div>
+<div style="position: relative;width:100%;text-align:center;font-size:large;margin-top: 4%">成长记录</div>
 <div style="position: relative;margin-top: 4%;text-align: center">
     <?php
     include("../Service/ProjectService.php");
@@ -78,7 +88,9 @@ use Ats\Service\ProjectService;
     echo "</form>";
     ?>
 </div>
+<p id="error_show" style="color: red;width: 100%;text-align: center"></p>
 <div id="myScoreDiv"></div>
+<label id="table_name" style="position: relative;margin-top: 5%;width: 100%;text-align: center;font-size: large"></label>
 <div id="showLine" style="width: 100%;height: 400px"></div>
 </body>
 </html>

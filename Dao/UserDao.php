@@ -15,24 +15,24 @@ use Ats\Conn\Conn;
 class UserDao
 {
     //增加用户
-    static function addUser($user_id, $user_name, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer){
-        $SQL_ADD_USER = "insert into ats_user(User_Id, User_Name,Brigade, Battalion, Continuous, Platoon, Monitor, Warrior, Officer)values($user_id,'$user_name',$brigade,$battalion,$continuous,$platoon,$monitor,$warrior,$officer)";
+    static function addUser($user_id, $user_name, $brigade, $battalion, $continuous, $platoon, $monitor, $officer){
+        $SQL_ADD_USER = "insert into ats_user(User_Id, User_Name,Brigade, Battalion, Continuous, Platoon, Monitor,Officer)values($user_id,'$user_name',$brigade,$battalion,$continuous,$platoon,$monitor,$officer)";
         Conn::init();
         $result = Conn::excute($SQL_ADD_USER);
         Conn::close();
         return $result;
     }
     //删除用户
-    static function deleteUser($user_id,$user_name){
-        $SQL_DELETE_USER = "delete from ats_user where User_Id= $user_id and User_Name ='$user_name'";
+    static function deleteUser($user_id){
+        $SQL_DELETE_USER = "delete from ats_user where User_Id= $user_id";
         Conn::init();
         $result = Conn::excute($SQL_DELETE_USER);
         Conn::close();
         return $result;//返回true or false
     }
     //修改用户（名字，所属单位,是否长官）依赖：user_id
-    static function updateUser($user_id, $user_name,$brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer){
-        $SQL_UPDATE_USER = "update ats_brigade set User_Name='$user_name',Brigade=$brigade ,Battalion = $battalion, Continuous = $continuous, Platoon= $platoon, Monitor=$monitor, Warrior=$warrior, Officer=$officer where User_Id= $user_id";
+    static function updateUser($user_id, $user_name,$brigade, $battalion, $continuous, $platoon, $monitor, $officer){
+        $SQL_UPDATE_USER = "update ats_user set User_Name='$user_name',Brigade=$brigade ,Battalion = $battalion, Continuous = $continuous, Platoon= $platoon, Monitor=$monitor,Officer=$officer where User_Id= $user_id";
         Conn::init();
         $result = Conn::excute($SQL_UPDATE_USER);
         Conn::close();
@@ -56,7 +56,7 @@ class UserDao
         return $result;
     }
 
-    //查找用户
+    //模糊查找用户
     static function findUser($parameter)
     {
         $SQL_SELECT_USER = "SELECT * FROM ats_user WHERE User_Id like  '%$parameter%' or User_Name like '%$parameter%' ";
@@ -65,14 +65,33 @@ class UserDao
         Conn::close();
         return $result;
     }
-    //查找指定用户存在否。依赖：user_id
-    static function existUser($user_id)
+    //查找指定用户,依赖：user_id
+    static function selectUser($user_id)
     {
-        $SQL_FIND_USER = "select COUNT(*) from ats_user where User_Id=$user_id";
+        $SQL_FIND_USER = "select * from ats_user where User_Id=$user_id";
         Conn::init();
         $result = Conn::query($SQL_FIND_USER);
         Conn::close();
-        return mysql_fetch_array($result)[0];//返回0 or 1
+        return $result;
+    }
+    //添加、修改用户检验，不可存在相同User_Id,一个部队不可存在多个长官
+    static function existUser($user_id,$brigade,$battalion,$continuous,$platoon,$monitor,$officer){
+        if($officer!=0)
+            $SQL_EXIST_USER="select User_Name from ats_user where (Brigade=$brigade and Battalion=$battalion and Continuous=$continuous and Platoon=$platoon and Monitor=$monitor and Officer=$officer) or User_Id=$user_id";
+        else
+            $SQL_EXIST_USER="select User_Name from ats_user where User_Id=$user_id";
+        Conn::init();
+        $result = Conn::query($SQL_EXIST_USER);
+        Conn::close();
+        return $result;
+    }
+    //添加、修改用户检验，一个班的战士不可以超过八个
+    static function countWarrior($user_id,$brigade,$battalion,$continuous,$platoon,$monitor){
+        $SQL_COUNT_WARRIOR="select count(*) from ats_user where Brigade=$brigade and Battalion=$battalion and Continuous=$continuous and Platoon=$platoon and Monitor=$monitor and Officer=0 and User_Id!=$user_id";
+        Conn::init();
+        $result = Conn::query($SQL_COUNT_WARRIOR);
+        Conn::close();
+        return $result;
     }
     //登录查询
     static function loginUser($user_id, $user_password)

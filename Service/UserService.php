@@ -14,16 +14,16 @@ use Ats\Dao\UserDao;
 class UserService
 {
     //增加用户，不需要密码，密码由数据库给定初始密码
-    static function addUser($user_id, $user_name, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer){
-        return UserDao::addUser($user_id, $user_name, $brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer);
+    static function addUser($user_id, $user_name, $brigade, $battalion, $continuous, $platoon, $monitor, $officer){
+        return UserDao::addUser($user_id, $user_name, $brigade, $battalion, $continuous, $platoon, $monitor,$officer);
     }
-    //删除用户,依赖：user_id，user_name
-    static function deleteUser($user_id,$user_name){
-        return UserDao::deleteUser($user_id,$user_name);
+    //删除用户,依赖：user_id
+    static function deleteUser($user_id){
+        return UserDao::deleteUser($user_id);
     }
     //修改用户信息
-    static function updateUser($user_id, $user_name,$brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer){
-        return UserDao::updateUser($user_id, $user_name,$brigade, $battalion, $continuous, $platoon, $monitor, $warrior, $officer);
+    static function updateUser($user_id, $user_name,$brigade, $battalion, $continuous, $platoon, $monitor,$officer){
+        return UserDao::updateUser($user_id, $user_name,$brigade, $battalion, $continuous, $platoon, $monitor, $officer);
     }
     //修改用户密码
     static function updateUserPassword($user_id,$new_password){
@@ -41,7 +41,6 @@ class UserService
     static function selectLowDownScore($clear_number){
         return UserDao::selectLowDownScore($clear_number);
     }
-
     //查询个人成绩
     static function myScoreSearch($number){
         return UserDao::myScoreSearch($number);
@@ -62,8 +61,20 @@ class UserService
     static function personalLineChart($number){
         return UserDao::personalLineChart($number);
     }
-    //查找用户
+    //模糊查找用户
     static function findUser($parameter){
         return UserDao::findUser($parameter);
+    }
+    //查找指定用户
+    static function selectUser($user_id){
+        return UserDao::selectUser($user_id);
+    }
+    //添加用户检验，不可存在相同User_Id,一个部队不可存在多个长官
+    static function existUser($user_id,$brigade,$battalion,$continuous,$platoon,$monitor,$officer){
+        return UserDao::existUser($user_id,$brigade,$battalion,$continuous,$platoon,$monitor,$officer);
+    }
+    //添加、修改用户检验，一个班的战士不可以超过八个
+    static function countWarrior($user_id,$brigade,$battalion,$continuous,$platoon,$monitor){
+        return UserDao::countWarrior($user_id,$brigade,$battalion,$continuous,$platoon,$monitor);
     }
 }

@@ -16,8 +16,6 @@ use Ats\Service\UserService;
 use Ats\Web\ResultShow;
 //判断提交表单的名称
 switch ($_POST['form_name']){
-    case 'addUser':
-        UserController::addUser();break;
     case 'scoreSearch':
         UserController::selectLowDownScore();break;
     case 'myScoreSearch':
@@ -25,13 +23,13 @@ switch ($_POST['form_name']){
     case 'scoreCompare':
         UserController::selectPiechart();break;
     case 'updateUserPassword':
-        UserController::updateUserPassword();
+        UserController::updateUserPassword();break;
     case 'scoreTermSearch':
         UserController::selectLineChart();break;
     case 'topList':
         UserController::longhubang();break;
     case 'selectMyInfo':
-        UserController::selectMyInfo();
+        UserController::selectMyInfo();break;
     case 'myScoreLine':
         UserController::personalLineChart();break;
 }
@@ -219,17 +217,14 @@ class UserController{
     //个人成绩折线图
     static function personalLineChart(){
         include("../Service/UserService.php");
+        include ("ResultShow.php");
         $user_id = $_SESSION['user_id'];
         $date_start = $_POST['startDate'];
         $date_end = $_POST['endDate'];
         $project = $_POST['project'];
         $number = array($date_start,$date_end,$project,$user_id);
         $result = UserService::personalLineChart($number);
-        for($i=0;$i<count($result);$i++){
-            while($row = mysql_fetch_array($result[$i])){
-                echo "date:".$row[0]."score:".$row[1];
-            }
-            echo "</br>";
-        }
+        $echo_str=ResultShow::showMyLine($result);
+        echo $echo_str;
     }
 }

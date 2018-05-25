@@ -15,15 +15,14 @@ if(!isset($_SESSION['admin_name']))
     <script>
         $(document).ready(function(){
             $("#buttonQuery").click(function(){
-                    $.post(document.queryUser.action,
-                        {
-                            form_name: document.queryUser.form_name.value,
-                            query_info: document.queryUser.query_info.value,
-                        },
-                        function (data) {
-                            document.getElementById("userDiv").innerHTML=data;
-                        });
-                }
+                $.post(document.queryUser.action,
+                    {
+                        form_name: document.queryUser.form_name.value,
+                        query_info: document.queryUser.query_info.value,
+                    },
+                    function (data) {
+                        document.getElementById("userDiv").innerHTML=data;
+                    });
             });
         });
     </script>
@@ -42,14 +41,11 @@ unset($_SESSION['success']);
 unset($_SESSION['error']);
 ?>
 <div style="position: relative;width:100%;margin-top: 5%;">
-    <form class="form-horizontal" name="queryUser" style="text-align:center;width:40%;margin-left: 30%;" action="../Web/AdminController.php" method="post">
+    <form class="form-inline" name="queryUser" style="text-align:center;width:60%;margin-left: 20%;" action="../Web/AdminController.php" method="post">
         <input type="hidden" name="form_name" value="queryUser"/>
         <div class="form-group">
-            <div class="col-sm-10">
                 <input id="query_info" class="form-control" placeholder="输入：用户名/编号" style="width: 100%" type="text" name="query_info"/>
-            </div>
         </div>
-        <p style="color: red" id="error_show"></p>
         <button id="buttonQuery" class="btn btn-primary" type="button">查询</button>
     </form>
 </div>

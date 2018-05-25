@@ -18,22 +18,44 @@ use Ats\Service\ProjectService;
     <script>
         $(document).ready(function(){
             $("#buttonSearch").click(function(){
-                $.post(document.scoreSearch.action,
-                    {
-                        form_name:document.scoreSearch.form_name.value,
-                        date:document.scoreSearch.date.value,
-                        battalion:document.scoreSearch.battalion.value,
-                        continuous:document.scoreSearch.continuous.value,
-                        platoon:document.scoreSearch.platoon.value,
-                        monitor:document.scoreSearch.monitor.value,
-                        project:document.scoreSearch.project.value
-                    },
-                    function(data){
-                        var project_value=document.scoreSearch.project.value;
-                        if(project_value!="all_project")
-                            document.getElementById('table_name').innerHTML=document.scoreSearch.project.value;
-                        document.getElementById('scoreDiv').innerHTML=data;
-                    });
+                var army_array=new Array(document.scoreSearch.date.value,document.scoreSearch.battalion.value,document.scoreSearch.continuous.value,document.scoreSearch.platoon.value,document.scoreSearch.monitor.value);
+                if(army_array[0]=="")
+                    $("#error_show").text("请选择日期");
+                else {
+                    var i = 1;
+                    var flag = 1;
+                    for (i; i < 5; i++)
+                        if (army_array[i] == "")
+                            break;
+                    for (i++; i < 5; i++) {
+                        if (army_array[i] != "") {
+                            flag = 0;
+                            break;
+                        }
+                    }
+                    if (flag == 0) {
+                        $("#error_show").text("请规范选择部队");
+                    } else {
+                        $("#error_show").text("");
+                        $.post(document.scoreSearch.action,
+                            {
+                                form_name: document.scoreSearch.form_name.value,
+                                date: document.scoreSearch.date.value,
+                                battalion: document.scoreSearch.battalion.value,
+                                continuous: document.scoreSearch.continuous.value,
+                                platoon: document.scoreSearch.platoon.value,
+                                monitor: document.scoreSearch.monitor.value,
+                                project: document.scoreSearch.project.value
+                            },
+                            function (data) {
+                                if ($("select[name='project'] option:selected").val() != "all_project") {
+                                    document.getElementById('table_name').style.display = 'block';
+                                    document.getElementById('table_name').innerHTML = $("select[name='project'] option:selected").text();
+                                }
+                                document.getElementById('scoreDiv').innerHTML = data;
+                            });
+                    }
+                }
             });
         });
     </script>
@@ -58,9 +80,9 @@ if($rank==0)
         echo "<input type='hidden' name='form_name' value='scoreSearch'/>";
         echo "<input class='form-control' type='date' name='date'/>";
         for($j=0;$j<$rank-1;$j++)
-            echo "<input type='hidden' name=".$option_names[$j][0]." value=''/>";
+            echo "<input type='hidden' name=".$option_names[$j][0]." value='0'/>";
         for ($i = $rank - 1; $i < 4; $i += 1)
-            echo "<select class='form-control' name=".$option_names[$i][0]."><option value=''>--".$option_names[$i][1]."--</option><option value=''>全部</option><option value='1'>".$option_names[$i][2]."</option><option value='2'>".$option_names[$i][3]."</option><option value='3'>".$option_names[$i][4]."</option></select>";
+            echo "<select class='form-control' name=".$option_names[$i][0]."><option value=''>--".$option_names[$i][1]."--</option><option value='1'>".$option_names[$i][2]."</option><option value='2'>".$option_names[$i][3]."</option><option value='3'>".$option_names[$i][4]."</option></select>";
         echo "<select class='form-control' name='project'><option value='all_project'>--项目--</option><option value='all_project'>全部</option>";
         while ($row=mysql_fetch_array($result))
             echo "<option value='".$row['Project_Id']."'>".$row['Project_Name']."</option>";
@@ -70,7 +92,8 @@ if($rank==0)
     }
  ?>
 </div>
-<label id="table_name" style="position: relative;margin-top: 5%;"></label>
+<p id="error_show" style="color: red;width: 100%;text-align: center"></p>
+<label id="table_name" style="position: relative;margin-top: 5%;width: 100%;text-align: center;font-size: large"></label>
 <div id="scoreDiv"></div>
 </body>
 </html>

@@ -3,10 +3,6 @@
 session_start();
 if(!isset($_SESSION['admin_name']))
     header('location:admin.php');
-if(isset($_SESSION['success']))
-    echo $_SESSION['success'];
-elseif (isset($_SESSION['error']))
-    echo $_SESSION['error'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

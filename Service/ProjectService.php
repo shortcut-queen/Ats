@@ -21,12 +21,24 @@ class ProjectService
     static function createProjectTable($project_name){
         return ProjectDao::createProjectTable($project_name);
     }
+    //修改训练项目
+    static  function updateProject($project_id,$project_name,$project_unit,$project_great,$project_good,$project_qualified){
+        return ProjectDao::updateProject($project_id,$project_name,$project_unit,$project_great,$project_good,$project_qualified);
+    }
     //删除训练项目
-    static function deleteProject($project_name){
-        ProjectDao::deleteProject($project_name);
+    static function deleteProject($project_id){
+        return ProjectDao::deleteProject($project_id);
+    }
+    //删除训练项目表
+    static  function  deleteProjectTable($project_id){
+        return ProjectDao::deleteProjectTable($project_id);
     }
     //查询所有项目表
     static function selectAllProject(){
         return ProjectDao::selectAllProject();
+    }
+    //查询指定项目表
+    static  function selectProject($project_id){
+        return ProjectDao::selectProject($project_id);
     }
 }

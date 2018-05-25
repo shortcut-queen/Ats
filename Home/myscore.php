@@ -18,21 +18,25 @@ use Ats\Service\ProjectService;
     <script>
         $(document).ready(function(){
             $("#buttonSearch").click(function(){
-                $.post(document.myScoreSearch.action,
-                    {
-                        form_name:document.myScoreSearch.form_name.value,
-                        date:document.myScoreSearch.date.value,
-                        project:document.myScoreSearch.project.value,
-                    },
-                    function(data){
-                        if($("select[name='project'] option:selected").val()!="all_project") {
-                            document.getElementById('table_name').style.display='block';
-                            document.getElementById('table_name').innerHTML = $("select[name='project'] option:selected").text();
-                        }
-                        else
-                            document.getElementById('table_name').style.display='none';
-                        document.getElementById('myScoreDiv').innerHTML=data;
-                    });
+                if(document.myScoreSearch.date.value=="")
+                    $("#error_show").text("请选择日期");
+                else {
+                    $.post(document.myScoreSearch.action,
+                        {
+                            form_name: document.myScoreSearch.form_name.value,
+                            date: document.myScoreSearch.date.value,
+                            project: document.myScoreSearch.project.value,
+                        },
+                        function (data) {
+                            if ($("select[name='project'] option:selected").val() != "all_project") {
+                                document.getElementById('table_name').style.display = 'block';
+                                document.getElementById('table_name').innerHTML = $("select[name='project'] option:selected").text();
+                            }
+                            else
+                                document.getElementById('table_name').style.display = 'none';
+                            document.getElementById('myScoreDiv').innerHTML = data;
+                        });
+                }
             });
         });
     </script>
@@ -55,6 +59,7 @@ use Ats\Service\ProjectService;
         echo "</form>";
         ?>
 </div>
+<p id="error_show" style="color: red;width: 100%;text-align: center"></p>
 <label id="table_name" style="position: relative;margin-top: 5%;width: 100%;text-align: center;font-size: large"></label>
 <div id="myScoreDiv" style="margin-top: 3%;"></div>
 </body>
