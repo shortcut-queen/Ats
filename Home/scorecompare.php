@@ -19,7 +19,7 @@ use Ats\Service\ProjectService;
     <script>
         $(document).ready(function(){
             $("#buttonSearch").click(function(){
-                var army_array=new Array(document.scoreCompare.date.value,document.scoreCompare.battalion.value,document.scoreCompare.continuous.value,document.scoreCompare.platoon.value,document.scoreCompare.monitor.value,document.scoreCompare.project.value);
+                var army_array=new Array(document.scoreCompare.date.value,document.scoreCompare.battalion.value,document.scoreCompare.continuous.value,document.scoreCompare.platoon.value,document.scoreCompare.project.value);
                 var army_number=new Array();
                 if(army_array[0]=="")
                     $("#error_show").text("请选择日期");
@@ -28,13 +28,13 @@ use Ats\Service\ProjectService;
                 else{
                     var i=1;
                     var flag=1;
-                    for(i;i<5;i++){
+                    for(i;i<4;i++){
                         if(army_array[i]!="")
                             army_number[i-1]=army_array[i];
                         if(army_array[i]=="")
                             break;
                     }
-                    for(i++;i<5;i++){
+                    for(i++;i<4;i++){
                         if(army_array[i]!=""){
                         flag=0;
                         break;
@@ -58,7 +58,6 @@ use Ats\Service\ProjectService;
                                 battalion:document.scoreCompare.battalion.value,
                                 continuous:document.scoreCompare.continuous.value,
                                 platoon:document.scoreCompare.platoon.value,
-                                monitor:document.scoreCompare.monitor.value,
                                 project:document.scoreCompare.project.value
                             },
                             function(data){
@@ -129,10 +128,9 @@ use Ats\Service\ProjectService;
     if($rank==5)
         echo "班级成绩";
     $option_names=array(
-        array('battalion','营级','一营','二营','三营')
+            array('battalion','营级','一营','二营','三营')
     ,array('continuous','连级','一连','二连','三连')
-    ,array('platoon','排级','一排','二排','三排')
-    ,array('monitor','班级','一班','二班','三班'));
+    ,array('platoon','排级','一排','二排','三排'));
     if($rank>0 && $rank<5) {
         //查询所有项目名称
         $result=ProjectService::selectAllProject();
@@ -141,7 +139,7 @@ use Ats\Service\ProjectService;
         echo "<input class='form-control' type='date' name='date'/>";
         for($j=0;$j<$rank-1;$j++)
             echo "<input type='hidden' name=".$option_names[$j][0]." value='0'/>";
-        for ($i = $rank - 1; $i < 4; $i += 1)
+        for ($i = $rank - 1; $i < 3; $i += 1)
             echo "<select class='form-control' name=".$option_names[$i][0]."><option value=''>--".$option_names[$i][1]."--</option><option value='1'>".$option_names[$i][2]."</option><option value='2'>".$option_names[$i][3]."</option><option value='3'>".$option_names[$i][4]."</option></select>";
         echo "<select class='form-control' name='project'><option value='all_project'>--项目--</option>";
         while ($row=mysql_fetch_array($result))

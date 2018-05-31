@@ -30,6 +30,8 @@ switch ($_POST['form_name']){
         AdminController::findUser();break;
     case 'editUser':
        AdminController::editUser();break;
+    case 'importScore':
+        AdminController::importScore();break;
 }
 
 class AdminController
@@ -171,5 +173,9 @@ class AdminController
                 header('location:../Admin/EditUser.php?user_id='.$user_id);
             }
         }
+     }
+     //成绩导入
+     static function importScore(){
+         $file=$_FILES['score_file'];
      }
 }

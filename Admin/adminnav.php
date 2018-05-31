@@ -26,7 +26,7 @@
                             <a href="">查看成绩</a>
                         </li>
                         <li style="background-color: #46b8da;font-size: 18px;">
-                            <a href="">导入成绩</a>
+                            <a href="importscore.php">导入成绩</a>
                         </li>
                     </ul>
                 </li>
