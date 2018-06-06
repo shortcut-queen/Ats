@@ -31,4 +31,8 @@ class AdminService{
     static function selectAllAdmin(){
         return AdminDao::selectAllAdmin();
     }
+    //查看成绩
+    static function scoreSearch($clear_number){
+        return AdminDao::scoreSearch($clear_number);
+    }
 }

@@ -70,6 +70,45 @@ class ResultShow
             return $echo_str;
         }
     }
+    //管理员显示查询到的成绩
+    static function adminScoreShow($result)
+    {
+
+        if (count($result) == 1) {
+            $echo_str = "<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><thead ><tr><th style='text-align: center'>编号</th><th style='text-align: center'>姓名</th><th style='text-align: center'>所属部队</th><th style='text-align: center'>成绩</th></tr></thead>";
+            while ($row = mysql_fetch_array($result[0])) {
+                $army_str="";
+                $army=array(array('一','二','三'),array('旅','营','连','排','班'));
+                for($j=0;$j<5;$j++) {
+                    if(intval($row[$j+2])==0)
+                        break;
+                    else
+                        $army_str=$army_str.$army[0][intval($row[$j+2])-1].$army[1][$j];
+                }
+                $echo_str = $echo_str . "<tr><td>$row[0]</td><td>$row[1]</td><td>$army_str</td><td>$row[7]</td></tr>";
+            }
+            $echo_str = $echo_str . "</table></br>";
+            return $echo_str;
+        } else {
+            $echo_str = "";
+            for ($i = 2; $i < count($result); $i++) {
+                $echo_str = $echo_str . "<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><caption style='text-align:center;font-size: 18px'><b>" . $result[0][$i - 2] . "&emsp;单位:" . $result[1][$i - 2] . "</b></caption><thead ><tr><th style='text-align: center'>编号</th><th style='text-align: center'>姓名</th><th style='text-align: center'>所属部队</th><th style='text-align: center'>成绩</th></tr></thead>";
+                while ($row = mysql_fetch_array($result[$i])) {
+                    $army_str="";
+                    $army=array(array('一','二','三'),array('旅','营','连','排','班'));
+                    for($j=0;$j<5;$j++) {
+                        if(intval($row[$j+2])==0)
+                            break;
+                        else
+                            $army_str=$army_str.$army[0][intval($row[$j+2])-1].$army[1][$j];
+                    }
+                    $echo_str = $echo_str . "<tr><td>$row[0]</td><td>$row[1]</td><td>$army_str</td><td>$row[7]</td></tr>";
+                }
+                $echo_str = $echo_str . "</table></br>";
+            }
+            return $echo_str;
+        }
+    }
     //显示饼状图
     static function showPie($result){
         $echo_str="";
@@ -163,6 +202,45 @@ class ResultShow
                     $army_str=$army_str.$army[0][intval($row[$j+3])-1].$army[1][$j];
             }
             $echo_str = $echo_str . "<tr><td>" . $row['User_Id'] . "</td><td>" . $row['User_Name'] . "</td><td>" . $army_str . "</td><td>" . $army[2][intval($row['Officer'])] . "</td><td><a href='../Admin/EditUser.php?user_id=" . $row['User_Id'] . "'><button class='btn btn-group-sm btn-primary' type='button'>编辑</button></a></td><td><a href='../Admin/DeleteUser.php?user_id=" . $row['User_Id'] . "'><button class='btn btn-group-sm btn-danger' type='button'>删除</button></a></td></tr>";
+        }
+        $echo_str=$echo_str."</table>";
+        return $echo_str;
+    }
+    //管理员界面显示资源
+    static function showResource($result){
+        $echo_str="<table style='width: 80%;margin-left: 10%;text-align: center;' class='table table-striped'><thead ><tr><th style='text-align: center'>序号</th><th style='text-align: center'>资源标题</th><th style='text-align: center'>资源类型</th><th style='text-align: center'>上传时间</th><th style='text-align: center'>下载量</th><th style='text-align: center'>上传者</th><th style='text-align: center'>查看</th><th style='text-align: center'>删除</th></tr></thead>";
+        $i=1;
+        while($row=mysql_fetch_array($result)){
+            $type=array('文档','图片','视频');
+            $echo_str=$echo_str."<tr><td>$i</td><td>".$row['Resource_Name']."</td><td>".$type[intval($row['Resource_Type'])-1]."</td><td>".$row['Upload_Date']."</td><td>".$row['Resource_Download']."</td><td>".$row['Admin_Name']."</td><td><a href='../Admin/ResourceDetail.php?resource_id=" . $row['Resource_Id'] . "'><button class='btn btn-group-sm btn-primary' type='button'>查看</button></a></td><td><a href='../Admin/DeleteResource.php?resource_id=" . $row['Resource_Id'] . "&resource_type=".$row['Resource_Type']."&resource_address=".$row['Resource_Address']."'><button class='btn btn-group-sm btn-danger' type='button'>删除</button></a></td></tr>";
+            $i+=1;
+        }
+        $echo_str=$echo_str."</table>";
+        return $echo_str;
+    }
+    //用户界面显示资源
+    static function showUserResource($result){
+        $echo_str="<table style='width: 80%;margin-left: 10%;' class='table'>";
+        $i=0;
+        $flag=0;
+        $type_dir=array("text","img","video");
+        $type_array=array("../Static/images/doc.png","../Static/images/picture.png","../Static/images/video.png");
+        while($row=mysql_fetch_array($result)){
+            if($i%4==0&&$flag==0) {
+                $echo_str = $echo_str . "<tr>";
+                $flag=1;
+            }
+            $echo_str=$echo_str."<td style='width: 25%;height: 200px;'><div style='width: 100%;height: 15%;background-color:rgba(70,184,218,0.5);'><span style='float: left;padding:2% 0 0 5%;font-size: 16px;'>".$row['Resource_Name']."</span><img style='width:20px;height:20px;float: right;margin:2% 5% 0 0;'src='".$type_array[intval($row['Resource_Type'])-1]."'/></div><div style='width: 100%;background-color:rgba(70,184,218,0.5);height: 70%;overflow: hidden;text-align: left;padding:3% 3% 3% 3%;'>".str_replace("\n",'<br>',$row['Resource_About'])."</div><div style='width: 100%;height:15%'><div style='background-color: #ff8500;width:49.5%;float: left;text-align: center;height: 100%;padding-top: 2%;'><a style='color: black;text-decoration: none;width:100%;' href='../Home/resourcedetail.php?resource_id=".$row['Resource_Id']."'>查看</a></div><div style='float: left;height:100%;padding-top: 2%;text-align: center;background-color: #ff8500;width:49.5%;margin-left: 1%;'><a href='../Static/upload/".$type_dir[intval($row['Resource_Type'])-1]."/".$row['Resource_Address']."' download='".$row['Resource_Address']."' style='width:100%;color: black;text-decoration: none;'>下载</a></div></div></td>";
+            $i+=1;
+            if($i%4==0&&$flag==1) {
+                $echo_str = $echo_str . "</tr>";
+                $flag=0;
+            }
+        }
+        $j=$i%4;
+        while($j>0&&$j<4) {
+            $echo_str = $echo_str . "<td style='width: 25%;height: 200px;'></td>";
+            $j+=1;
         }
         $echo_str=$echo_str."</table>";
         return $echo_str;

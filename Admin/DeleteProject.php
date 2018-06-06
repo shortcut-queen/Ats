@@ -6,6 +6,8 @@
  * Time: 23:30
  */
 session_start();
+if(!isset($_SESSION['admin_name']))
+    header('location:index.php');
 use Ats\Service\ProjectService;
 include("../Service/ProjectService.php");
 $project_id=$_GET['project_id'];

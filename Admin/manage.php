@@ -2,7 +2,7 @@
 //未登录返回登陆页面
 session_start();
 if(!isset($_SESSION['admin_name']))
-    header('location:admin.php');
+    header('location:index.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +25,7 @@ if(!isset($_SESSION['admin_name']))
         });
     </script>
 </head>
-<body>
+<body >
 <?php include("adminnav.php") ?>
 <div style="position: relative;width:100%;text-align:center;font-size:large;margin-top: 4%">龙虎榜</div>
 <div id="topList" style="position: relative;margin-top: 8%;width:100%;">

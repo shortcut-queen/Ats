@@ -3,7 +3,7 @@
 use Ats\Service\UserService;
 session_start();
 if(!isset($_SESSION['admin_name']))
-    header('location:admin.php');
+    header('location:index.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -32,6 +32,8 @@ switch ($_POST['form_name']){
        AdminController::editUser();break;
     case 'importScore':
         AdminController::importScore();break;
+    case 'scoreSearch':
+        AdminController::scoreSearch();break;
 }
 
 class AdminController
@@ -174,6 +176,28 @@ class AdminController
             }
         }
      }
+     //管理员查看成绩
+    static function scoreSearch(){
+        include("../Service/AdminService.php");
+        include("ResultShow.php");
+        $date = $_POST['date'];
+        $project = $_POST['project'];
+        $brigade=$_POST['brigade'];
+        $battalion = $_POST['battalion'];
+        $continuous = $_POST['continuous'];
+        $platoon = $_POST['platoon'];
+        $monitor = $_POST['monitor'];
+        $number=array($date,$project,$brigade,$battalion,$continuous,$platoon,$monitor);
+        //清理数组，删除NULL数据
+        $i = 6;
+        while($number[$i]== ""){
+            $i--;
+        }
+        $clear_number = array_slice($number, 0, $i + 1);
+        $result = AdminService::scoreSearch($clear_number);
+        $echo_str=ResultShow::adminScoreShow($result);
+        echo $echo_str;
+    }
      //成绩导入
      static function importScore(){
          $file=$_FILES['score_file'];

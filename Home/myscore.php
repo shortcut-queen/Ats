@@ -21,11 +21,12 @@ use Ats\Service\ProjectService;
                 if(document.myScoreSearch.date.value=="")
                     $("#error_show").text("请选择日期");
                 else {
+                    $("#error_show").text("");
                     $.post(document.myScoreSearch.action,
                         {
                             form_name: document.myScoreSearch.form_name.value,
                             date: document.myScoreSearch.date.value,
-                            project: document.myScoreSearch.project.value,
+                            project: document.myScoreSearch.project.value
                         },
                         function (data) {
                             if ($("select[name='project'] option:selected").val() != "all_project") {
@@ -34,6 +35,8 @@ use Ats\Service\ProjectService;
                             }
                             else
                                 document.getElementById('table_name').style.display = 'none';
+                            if(data=="")
+                                data="<div style='width:100%;text-align: center;'>没有数据</div>";
                             document.getElementById('myScoreDiv').innerHTML = data;
                         });
                 }

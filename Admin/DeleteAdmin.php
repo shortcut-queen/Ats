@@ -5,7 +5,10 @@
  * Date: 2018/5/5
  * Time: 23:30
  */
+//未登录返回登陆页面
 session_start();
+if(!isset($_SESSION['admin_name']))
+    header('location:index.php');
 use Ats\Service\AdminService;
 include("../Service/AdminService.php");
 $admin_name=$_GET['admin_name'];

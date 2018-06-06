@@ -6,6 +6,8 @@
  * Time: 23:30
  */
 session_start();
+if(!isset($_SESSION['admin_name']))
+    header('location:index.php');
 use Ats\Service\UserService;
 include("../Service/UserService.php");
 $user_id=$_GET['user_id'];

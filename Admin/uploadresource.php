@@ -2,7 +2,7 @@
 //未登录返回登陆页面
 session_start();
 if(!isset($_SESSION['admin_name']))
-    header('location:admin.php');
+    header('location:index.php');
 
 ?>
 <!DOCTYPE html>
@@ -23,7 +23,7 @@ echo "<div style='position: relative;margin-top: 3.5%;'>";
 if(isset($_SESSION['success']))
     echo "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>".$_SESSION['success']."</div>";
 if(isset($_SESSION['error']))
-    echo "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>".$_SESSION['error']."</div>";
+    echo "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>".$_SESSION['error']."</div>";
 echo "</div>";
 unset($_SESSION['success']);
 unset($_SESSION['error']);
@@ -39,21 +39,25 @@ unset($_SESSION['error']);
             </div>
         </div>
         <div class="form-group">
-            <label style="float:left;width:16.667%;padding:0 2.5% 0 2.5%;text-align:right;margin-top: 1%">选择文件</label>
-            <div style="width: 83%;height: 100%;float: left">
-                <input  type="file" style="width;30%;float: left;margin-left:3.5%;margin-top:1%;" name="resource_file"/>
-                <select class="form-control" style="margin-left:16%;width: 30%;float: left" name="resource_type">
-                    <option>--资源类型--</option>
-                    <option>文档</option>
-                    <option>图片</option>
-                    <option>视频</option>
+            <label class="col-sm-2 control-label">选择文件</label>
+            <div class="col-sm-10">
+                <input  type="file" class="file-loading"  name="resource_file"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">资源类型</label>
+            <div class="col-sm-10">
+                <select class="form-control"  name="resource_type">
+                    <option value="1">文档</option>
+                    <option value="2">图片</option>
+                    <option value="3">视频</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">资源说明</label>
             <div class="col-sm-10">
-                <input class="form-control" type="text" style="width;100%;" name="resource_about"/>
+                <textarea class="form-control" type="text" style="width;100%;" name="resource_about"></textarea>
             </div>
         </div>
         <button class="btn btn-primary" type="submit">上传</button>

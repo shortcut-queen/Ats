@@ -23,7 +23,7 @@
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&emsp;成绩管理&emsp;<span class="caret"></a>
                     <ul class="dropdown-menu">
                         <li style="background-color: #46b8da;font-size: 18px;">
-                            <a href="">查看成绩</a>
+                            <a href="score.php">查看成绩</a>
                         </li>
                         <li style="background-color: #46b8da;font-size: 18px;">
                             <a href="importscore.php">导入成绩</a>
@@ -45,7 +45,7 @@
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&emsp;资源管理&emsp;<span class="caret"></a>
                     <ul class="dropdown-menu">
                         <li style="background-color: #46b8da;font-size: 18px;">
-                            <a href="">所有资源</a>
+                            <a href="allresource.php">所有资源</a>
                         </li>
                         <li style="background-color: #46b8da;font-size: 18px;">
                             <a href="uploadresource.php">上传资源</a>

@@ -2,7 +2,7 @@
 //未登录返回登陆页面
 session_start();
 if(!isset($_SESSION['admin_name']))
-    header('location:admin.php');
+    header('location:index.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +42,7 @@ echo "<div style='position: relative;margin-top: 3.5%;'>";
 if(isset($_SESSION['success']))
     echo "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>".$_SESSION['success']."</div>";
 if(isset($_SESSION['error']))
-    echo "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>".$_SESSION['error']."</div>";
+    echo "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>".$_SESSION['error']."</div>";
 echo "</div>";
 unset($_SESSION['success']);
 unset($_SESSION['error']);

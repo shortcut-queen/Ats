@@ -102,7 +102,7 @@ class UserController{
         }
         $clear_number = array_slice($number, 0, $i + 1);
         $result1 = UserService::selectLowDownScore($clear_number);
-        $echo_str=ResultShow::ScoreShow($result1);
+        $echo_str=ResultShow::scoreShow($result1);
         echo $echo_str;
     }
 

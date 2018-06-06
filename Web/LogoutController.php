@@ -8,7 +8,7 @@
 session_start();
 if(isset($_SESSION['admin_name'])){
     session_destroy();
-    header("location:../Admin/admin.php");
+    header("location:../Admin/index.php");
 }
 elseif(isset($_SESSION['user_id'])){
     session_destroy();
