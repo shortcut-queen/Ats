@@ -13,6 +13,7 @@ if(!isset($_SESSION['admin_name']))
 //引用类
 use Ats\Service\AdminService;
 use Ats\Service\UserService;
+use Ats\Service\ProjectService;
 use Ats\Web\ResultShow;
 //判断提交表单的名称
 switch ($_POST['form_name']){
@@ -34,6 +35,8 @@ switch ($_POST['form_name']){
         AdminController::importScore();break;
     case 'scoreSearch':
         AdminController::scoreSearch();break;
+    case 'editScore':
+        AdminController::editScore();break;
 }
 
 class AdminController
@@ -195,11 +198,72 @@ class AdminController
         }
         $clear_number = array_slice($number, 0, $i + 1);
         $result = AdminService::scoreSearch($clear_number);
-        $echo_str=ResultShow::adminScoreShow($result);
+        $echo_str=ResultShow::adminScoreShow($result,$project,$date);
         echo $echo_str;
     }
-     //成绩导入
-     static function importScore(){
-         $file=$_FILES['score_file'];
-     }
+    //成绩导入
+    static function importScore(){
+        include('../Service/ProjectService.php');
+        require '../PHPExcel/Classes/PHPExcel/IOFactory.php';
+        require_once '../PHPExcel/Classes/PHPExcel/Shared/Date.php';
+        $uploadedfile=$_FILES['score_file'];
+        if($uploadedfile['type']!="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"&&$uploadedfile['type']!="application/vnd.ms-excel"){
+            $_SESSION['error'] = '文件格式错误！';
+            header('location:../Admin/importscore.php');
+        }else {
+        move_uploaded_file($uploadedfile['tmp_name'],"../Static/temp/".$uploadedfile['name']);
+        $file="../Static/temp/".$uploadedfile['name'];
+        $type = strtolower( pathinfo($file, PATHINFO_EXTENSION) );
+        if( $type=='xlsx'||$type=='xls' ) {
+            $objPHPExcel = \PHPExcel_IOFactory::load($file);
+        }
+        elseif($type=='csv') {
+            $objReader = \PHPExcel_IOFactory::createReader('CSV')
+                ->setDelimiter(',')
+                ->setInputEncoding('GBK')
+                ->setInputEncoding('GBK')
+                ->setEnclosure('"')
+                ->setLineEnding("\r\n")
+                ->setSheetIndex(0);
+            $objPHPExcel = $objReader->load($file);
+        }
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet -> getHighestColumn();
+        $testColumn ='D';//确定项目名称对应
+        $testRow = 2;
+        $data = $sheet->getCell($testColumn.$testRow)->getValue();
+        $resultexit = ProjectService::exitProject($data);
+
+        if($resultexit){
+            for($row=2;$row <=$highestRow;$row++){
+                $dataset = array();
+                for($column = 'AID';$column <= $highestColumn;$column++){
+                    $data1 = $sheet->getCell($column.$row)->getValue();
+                    array_push($dataset,$data1);
+                }
+                ProjectService::addScore($resultexit,$dataset);
+            }
+        }
+        unlink("../Static/temp/".$uploadedfile['name']);//删除临时文件
+        $_SESSION['success'] = '导入成功！';
+        header('location:../Admin/importscore.php');
+        }
+    }
+    //修改用户成绩
+    static function editScore(){
+         include("../Service/AdminService.php");
+         $project_id=$_POST['project_id'];
+         $user_id=$_POST['user_id'];
+         $date=$_POST['date'];
+         $train_score=$_POST['train_score'];
+         $result=AdminService::editScore($project_id,$user_id,$date,$train_score);
+         if($result){
+             $_SESSION['success'] = '修改成功！';
+             echo "<script>history.go(-1);</script>";
+         }else{
+             $_SESSION['error'] = '修改失败！';
+             echo "<script>history.go(-1);</script>";
+         }
+    }
 }

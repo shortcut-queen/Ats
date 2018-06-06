@@ -32,9 +32,10 @@ use Ats\Service\ProjectService;
                             if ($("select[name='project'] option:selected").val() != "all_project") {
                                 document.getElementById('table_name').style.display = 'block';
                                 document.getElementById('table_name').innerHTML = $("select[name='project'] option:selected").text();
+                            }else{
+                                document.getElementById('table_name').style.display = 'block';
+                                document.getElementById('table_name').innerHTML ="";
                             }
-                            else
-                                document.getElementById('table_name').style.display = 'none';
                             if(data=="")
                                 data="<div style='width:100%;text-align: center;'>没有数据</div>";
                             document.getElementById('myScoreDiv').innerHTML = data;

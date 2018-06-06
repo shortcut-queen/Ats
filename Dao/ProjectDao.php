@@ -75,4 +75,25 @@ class ProjectDao
         Conn::close();
         return $result;
     }
+    //查询指定项目是否存在
+    static function exitProject($project_name){
+        $SQL_SELECT_EXIT_PROJECT="select Project_Id from ats_project where Project_name = '$project_name'";
+        Conn::init();
+        $result = Conn::excute($SQL_SELECT_EXIT_PROJECT);
+        Conn::close();
+        $row = mysql_fetch_array($result);
+        echo $row[0];
+        return $row[0];
+    }
+    //添加上传的成绩
+    static function addScore($project_id,$array){
+        date_default_timezone_set("Asia/Shanghai");
+        require_once '../PHPExcel/Classes/PHPExcel/Shared/Date.php';
+        $changedate = gmdate('Y-m-d',\PHPExcel_Shared_Date::ExcelToPHP($array[2]));//时间转换成Y-M-D格式
+        $SQL_UPDATE_ADD_SCORE = "insert into ats_project_$project_id VALUES( '$array[0]','$changedate','$array[4]')";
+        Conn::init();
+        $result = Conn::excute($SQL_UPDATE_ADD_SCORE);
+        Conn::close();
+        return $result;
+    }
 }

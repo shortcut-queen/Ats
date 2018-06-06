@@ -15,20 +15,26 @@ if(!isset($_SESSION['admin_name']))
     <script>
         $(document).ready(function(){
             $("#buttonQuery").click(function(){
-                $.post(document.queryUser.action,
-                    {
-                        form_name: document.queryUser.form_name.value,
-                        query_info: document.queryUser.query_info.value,
-                    },
-                    function (data) {
-                        document.getElementById("userDiv").innerHTML=data;
-                    });
+                if(document.queryUser.query_info.value==""){
+                    $("#error_show").text("请输入关键字");
+                }else {
+                    $("#error_show").text("");
+                    $.post(document.queryUser.action,
+                        {
+                            form_name: document.queryUser.form_name.value,
+                            query_info: document.queryUser.query_info.value
+                        },
+                        function (data) {
+                            document.getElementById("userDiv").innerHTML = data;
+                        });
+                }
             });
         });
     </script>
 </head>
 <body>
 <?php include("adminnav.php") ?>
+
 <?php
 //显示提示信息
 echo "<div style='position: relative;margin-top: 3.5%;'>";
@@ -40,7 +46,7 @@ echo "</div>";
 unset($_SESSION['success']);
 unset($_SESSION['error']);
 ?>
-<div style="position: relative;width:100%;margin-top: 5%;">
+<div style="position: relative;margin-top: 8%;text-align: center">
     <form class="form-inline" name="queryUser" style="text-align:center;width:60%;margin-left: 20%;" action="../Web/AdminController.php" method="post">
         <input type="hidden" name="form_name" value="queryUser"/>
         <div class="form-group">
@@ -49,6 +55,7 @@ unset($_SESSION['error']);
         <button id="buttonQuery" class="btn btn-primary" type="button">查询</button>
     </form>
 </div>
-<div id="userDiv" style="position: relative;margin-top: 8%;width:100%;"></div>
+<p id="error_show" style="color: red;width: 100%;text-align: center"></p>
+<div id="userDiv" ></div>
 </body>
 </html>

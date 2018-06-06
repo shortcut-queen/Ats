@@ -27,4 +27,7 @@ class ResourceService
     static function detailResource($resource_id){
         return ResourceDao::detailResource($resource_id);
     }
+    static function updateDownload($resource_id){
+        return ResourceDao::updateDownload($resource_id);
+    }
 }

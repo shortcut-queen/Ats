@@ -33,12 +33,19 @@ unset($_SESSION['error']);
         <label>导入成绩</label>
         <input type="hidden" name="form_name" value="importScore">
         <div class="form-group">
-            <label style="float:left;width:16.667%;padding:0 2.5% 0 2.5%;text-align:right;margin-top: 1%">选择文件</label>
-            <div style="width: 83%;height: 100%;float: left">
-                <input  type="file" style="width;30%;float: left;margin-left:3.5%;margin-top:1%;" name="score_file"/>
+            <label class="col-sm-2 control-label">选择文件</label>
+            <div class="col-sm-10">
+                <input type="file" class="file-loading" name="score_file"/>
             </div>
         </div>
-        <button class="btn btn-primary" type="submit">上传</button>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">导入说明</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" disabled="disabled" wrap="soft">支持文件类型：*.xls,*.xlsx
+表格格式：列名顺序为(用户ID,用户名,训练日期,项目名称,训练成绩)</textarea>
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">导入</button>
     </form>
 </div>
 </body>

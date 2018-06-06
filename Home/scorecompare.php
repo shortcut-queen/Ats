@@ -23,7 +23,7 @@ use Ats\Service\ProjectService;
                 var army_number=new Array();
                 if(army_array[0]=="")
                     $("#error_show").text("请选择日期");
-                else if(army_array[5]=="all_project")
+                else if(army_array[4]=="all_project")
                     $("#error_show").text("请选择项目");
                 else{
                     var i=1;

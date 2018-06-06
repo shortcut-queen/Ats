@@ -60,6 +60,15 @@ unset($_SESSION['error']);
                 <textarea class="form-control" type="text" style="width;100%;" name="resource_about"></textarea>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">上传说明</label>
+            <div class="col-sm-10">
+                <textarea disabled="disabled" class="form-control" type="text" style="width;100%;" rows="4" name="resource_attention">上传文件类型及格式：
+文档：txt,pdf(不超过5M)
+图片：gif,jpg,png(不超过3M)
+视频：mp4(不超过20M)</textarea>
+            </div>
+        </div>
         <button class="btn btn-primary" type="submit">上传</button>
     </form>
 </div>

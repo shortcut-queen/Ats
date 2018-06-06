@@ -48,4 +48,12 @@ class ResourceDao
         Conn::close();
         return $result;
     }
+    //修改下载量
+    static function updateDownload($resource_id){
+        $SQL_UPDATE_DOWNLOAD="update ats_resource set Resource_Download=Resource_Download+1 where Resource_Id=$resource_id";
+        Conn::init();
+        $result=Conn::excute($SQL_UPDATE_DOWNLOAD);
+        Conn::close();
+        return $result;
+    }
 }

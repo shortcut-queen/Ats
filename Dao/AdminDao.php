@@ -61,12 +61,16 @@ class AdminDao{
         //标准的数组
         $whole_number = array("Date", "project_id", "Brigade", "Battalion", "Continuous", "Platoon", "Monitor");
         $len_clear_result = count($clear_number) - 1;
-        $SQL_SELECT_ONESCORE = "select ats_user.User_Id,ats_user.User_name,ats_user.Brigade,ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor,ats_project_$clear_number[1].Train_Score from ats_user,ats_project_$clear_number[1] where  ats_user.User_Id=ats_project_$clear_number[1].User_Id and ats_project_$clear_number[1].Train_Date = '$clear_number[0] ' and ats_user.User_Id in(select  User_Id from ats_user where ";
-        for ($i = 2; $i < $len_clear_result; $i++) {
-            $SQL_ASSIGNMENT = "$whole_number[$i] = '$clear_number[$i]'";
-            $SQL_SELECT_ONESCORE = "$SQL_SELECT_ONESCORE" . "$SQL_ASSIGNMENT" . " " . "and" . " ";
+        if($len_clear_result>1){
+            $SQL_SELECT_ONESCORE = "select ats_user.User_Id,ats_user.User_name,ats_user.Brigade,ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor,ats_project_$clear_number[1].Train_Score from ats_user,ats_project_$clear_number[1] where  ats_user.User_Id=ats_project_$clear_number[1].User_Id and ats_project_$clear_number[1].Train_Date = '$clear_number[0] ' and ats_user.User_Id in(select  User_Id from ats_user where ";
+            for ($i = 2; $i < $len_clear_result; $i++) {
+                $SQL_ASSIGNMENT = "$whole_number[$i] = '$clear_number[$i]'";
+                $SQL_SELECT_ONESCORE = "$SQL_SELECT_ONESCORE" . "$SQL_ASSIGNMENT" . " " . "and" . " ";
+            }
+            $SQL_SELECT_LOWDOWNSCORE = "$SQL_SELECT_ONESCORE" . "$whole_number[$len_clear_result] = '$clear_number[$len_clear_result]'" . ")";//拼合成SQL语句
+        }else {
+            $SQL_SELECT_LOWDOWNSCORE = "select ats_user.User_Id,ats_user.User_name,ats_user.Brigade,ats_user.Battalion,ats_user.Continuous,ats_user.Platoon,ats_user.Monitor,ats_project_$clear_number[1].Train_Score from ats_user,ats_project_$clear_number[1] where  ats_user.User_Id=ats_project_$clear_number[1].User_Id and ats_project_$clear_number[1].Train_Date = '$clear_number[0] '";
         }
-        $SQL_SELECT_LOWDOWNSCORE = "$SQL_SELECT_ONESCORE" . "$whole_number[$len_clear_result] = '$clear_number[$len_clear_result]'" . ")";//拼合成SQL语句
         $result = array();
         $result[0] = Conn::query($SQL_SELECT_LOWDOWNSCORE);
         Conn::close();
@@ -81,6 +85,7 @@ class AdminDao{
         $result_project = Conn::query($SQL_FIND_PROJECT_NAME);
         Conn::close();
         $result = array();
+        $project_id_array=array();
         $project_name_array=array();
         $project_unit_array =array();
         while ($row = mysql_fetch_array($result_project)) {
@@ -89,6 +94,7 @@ class AdminDao{
 //            array_push($project_unit_array,$row[2]);
             $result_score=self::oneProjectScore($clear_number);
             if(mysql_num_rows($result_score[0])>=1){
+                array_push($project_id_array,$row[0]);
                 array_push($project_name_array,$row[1]);
                 array_push($project_unit_array,$row[2]);
                 array_push($result, $result_score[0]);//将遍历所有项目的成绩存储
@@ -97,6 +103,7 @@ class AdminDao{
         //Conn::close();
         array_unshift($result,$project_unit_array);
         array_unshift($result, $project_name_array);
+        array_unshift($result, $project_id_array);
         return $result;
     }
     //查看成绩
@@ -109,6 +116,33 @@ class AdminDao{
             //查询指定时间所有项目的个人信息、成绩
             $result = self::allProjectScore($clear_number);
         }
+        return $result;
+    }
+    //删除成绩
+    static function deleteScore($user_id,$project_id,$date){
+        $table_name="ats_project_$project_id";
+        $SQL_DELETE_SCORE="delete from $table_name where User_Id=$user_id and Train_Date='$date'";
+        Conn::init();
+        $result=Conn::excute($SQL_DELETE_SCORE);
+        Conn::close();
+        return $result;
+    }
+    //查询指定用户成绩
+    static function selectScore($project_id,$user_id,$date){
+        $table_name="ats_project_$project_id";
+        $SQL_SELECT_USER_SCORE="select ats_user.User_Id,User_Name,Project_Name,Project_Unit,Train_Score from ats_user,ats_project,$table_name where ats_user.User_Id=$table_name.User_Id and ats_project.Project_Id=$project_id and $table_name.User_Id=$user_id and Train_Date='$date'";
+        Conn::init();
+        $result=Conn::query($SQL_SELECT_USER_SCORE);
+        Conn::close();
+        return mysql_fetch_array($result);
+    }
+    //修改用户成绩
+    static function editScore($project_id,$user_id,$date,$train_score){
+        $table_name="ats_project_$project_id";
+        $SQL_EDIT_USER_SCORE="update $table_name set Train_Score=$train_score where User_Id=$user_id and Train_Date='$date'";
+        Conn::init();
+        $result=Conn::excute($SQL_EDIT_USER_SCORE);
+        Conn::close();
         return $result;
     }
 }

@@ -82,6 +82,16 @@ if(!isset($_SESSION['user_id']))
                     document.getElementById('allResource').innerHTML=data;
                 });
         });
+        function download(resource_id) {
+            $.post("../Web/ResourceController.php",
+                {
+                    form_name:"updateDownload",
+                    resource_id:resource_id
+                },
+                function(data){
+
+                });
+        }
     </script>
     <style type="text/css">
         .bgcolor-gray{background-color:#e7e7e7}
@@ -105,16 +115,16 @@ unset($_SESSION['error']);
 <div id="type_choose" style="line-height: 50px;margin-left:10%;margin-top:10%;width:80%;height:50px;background-color: #46b8da;padding-left: 2%;">
     <ul class="nav navbar-nav">
         <li>
-            <a  id="all" style="font-size: 18px;text-decoration: none;color: #777777;" class="bgcolor-gray" role="button">全部</a>
+            <a  id="all" style="width:100%;font-size: 18px;text-decoration: none;color: #777777;" class="bgcolor-gray" role="button">全部</a>
         </li>
         <li>
-            <a  id="text" style="font-size: 18px;margin-left: 2%;text-decoration: none;color: #777777;" role="button">文档</a>
+            <a  id="text" style="width:100%;font-size: 18px;margin-left: 2%;text-decoration: none;color: #777777;" role="button">文档</a>
         </li>
         <li>
-            <a  id="image" style="font-size: 18px;margin-left: 2%;text-decoration: none;color: #777777;" role="button">图片</a>
+            <a  id="image" style="width:100%;font-size: 18px;margin-left: 2%;text-decoration: none;color: #777777;" role="button">图片</a>
         </li>
         <li>
-            <a id="video" style="font-size: 18px;margin-left: 2%;text-decoration: none;color: #777777;" role="button">视频</a>
+            <a  id="video" style="width:100%;font-size: 18px;margin-left: 2%;text-decoration: none;color: #777777;" role="button">视频</a>
         </li>
     </ul>
 </div>

@@ -41,4 +41,12 @@ class ProjectService
     static  function selectProject($project_id){
         return ProjectDao::selectProject($project_id);
     }
+    //查询指定项目是否存在
+    static function exitProject($project_name){
+        return ProjectDao::exitProject($project_name);
+    }
+    //根据项目Id上传成绩
+    static function addScore($project_id,$array){
+        return ProjectDao::addScore($project_id,$array);
+    }
 }

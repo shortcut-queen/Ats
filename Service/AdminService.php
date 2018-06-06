@@ -35,4 +35,16 @@ class AdminService{
     static function scoreSearch($clear_number){
         return AdminDao::scoreSearch($clear_number);
     }
+    //删除成绩
+    static function deleteScore($user_id,$project_id,$date){
+        return AdminDao::deleteScore($user_id,$project_id,$date);
+    }
+    //查询指定成绩
+    static function selectScore($project_id,$user_id,$date){
+        return AdminDao::selectScore($project_id,$user_id,$date);
+    }
+    //修改用户成绩
+    static function editScore($project_id,$user_id,$date,$train_score){
+        return AdminDao::editScore($project_id,$user_id,$date,$train_score);
+    }
 }

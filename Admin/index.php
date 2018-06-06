@@ -12,7 +12,7 @@ if(isset($_SESSION['admin_name']))
     <script src="../Static/js/bootstrap.min.js"></script>
     <script src="../Static/js/jquery-3.2.1.js"></script>
 </head>
-<body style="background: url('../Static/images/bg.jpg');">
+<body style="background: url('../Static/images/bg.jpg');background-size: cover;">
 <?php
 //显示提示信息
 echo "<div style='position: relative;'>";
@@ -24,6 +24,7 @@ echo "</div>";
 unset($_SESSION['success']);
 unset($_SESSION['error']);
 ?>
+<div style="width:100%;text-align:center;margin-top:3%;color:black;font-family:楷体;position:absolute;font-size: 32px;">军校训练系统</div>
 <div style="position: fixed; margin-top: 10%;margin-left: 60%; width:300px;height:250px;background-color:rgba(70,184,218,0.6); border-radius: 10px;">
     <label class="h4"style="background-color:rgba(46,109,164,0.6);width: 100%;height:15%;margin-top: 0px;border-radius:10px 10px 0px 0px;padding-top: 10px;padding-left: 15px;">管理员登录
         <a href="../Home/index.php" style="float: right;margin-right: 10%;"><img src="../Static/images/user.png" style="width: 20px;height: 20px;"></a>

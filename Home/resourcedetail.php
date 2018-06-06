@@ -26,6 +26,16 @@ if(!isset($_SESSION['user_id']))
         window.onload = function () {
             setIframeHeight(document.getElementById('external-frame'));
         };
+        function download(resource_id) {
+            $.post("../Web/ResourceController.php",
+                {
+                    form_name:"updateDownload",
+                    resource_id:resource_id
+                },
+                function(data){
+
+                });
+        }
     </script>
 </head>
 <body>
@@ -75,7 +85,7 @@ $row=mysql_fetch_array($result);
         </tr>
         <tr>
             <td width="50%;"><button class="btn btn-primary" onclick="javascript:history.go(-1)">返回</button></td>
-            <td><a href="../Static/upload/<?php $file_type=array("text","img","video"); echo $file_type[intval($row['Resource_Type'])-1].'/'.$row['Resource_Address'];?>" download="<?php echo $row['Resource_Address'];?>"><button class="btn btn-success">下载</button></a></td>
+            <td><a href="../Static/upload/<?php $file_type=array("text","img","video"); echo $file_type[intval($row['Resource_Type'])-1].'/'.$row['Resource_Address'];?>" download="<?php echo $row['Resource_Address'];?>"><button class="btn btn-success" onclick="download(<?php echo $resource_id?>)">下载</button></a></td>
         </tr>
     </table>
 </div>

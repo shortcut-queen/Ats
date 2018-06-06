@@ -36,6 +36,7 @@ if(!isset($_SESSION['admin_name']))
 </head>
 <body>
 <?php include("adminnav.php") ?>
+
 <?php
 //显示提示信息
 echo "<div style='position: relative;margin-top: 3.5%;'>";
