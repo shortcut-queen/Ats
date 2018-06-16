@@ -234,20 +234,24 @@ class AdminController
         $testRow = 2;
         $data = $sheet->getCell($testColumn.$testRow)->getValue();
         $resultexit = ProjectService::exitProject($data);
-
         if($resultexit){
             for($row=2;$row <=$highestRow;$row++){
                 $dataset = array();
-                for($column = 'AID';$column <= $highestColumn;$column++){
+                for($column = 'A';$column <= $highestColumn;$column++){
                     $data1 = $sheet->getCell($column.$row)->getValue();
                     array_push($dataset,$data1);
                 }
                 ProjectService::addScore($resultexit,$dataset);
             }
+            unlink("../Static/temp/".$uploadedfile['name']);//删除临时文件
+            $_SESSION['success'] = '导入成功！';
+            header('location:../Admin/importscore.php');
         }
-        unlink("../Static/temp/".$uploadedfile['name']);//删除临时文件
-        $_SESSION['success'] = '导入成功！';
-        header('location:../Admin/importscore.php');
+        else{
+            unlink("../Static/temp/".$uploadedfile['name']);//删除临时文件
+            $_SESSION['error'] = '导入失败！';
+            header('location:../Admin/importscore.php');
+        }
         }
     }
     //修改用户成绩

@@ -123,7 +123,10 @@ class ResultShow
     static function showLine($result){
         $echo_str="";
         for($i=0;$i<count($result[0]);$i++)
-            $echo_str=$echo_str."<input type='hidden' id='date".$i."' name='".$result[0][$i]."' value='".$result[$i+1]."'>";
+            $echo_str=$echo_str."<input type='hidden' id='date".$i."' name='".$result[0][$i]."'>";
+        for($j=0;$j<3;$j++)
+            for($k=0;$k<count($result[0]);$k++)
+                $echo_str=$echo_str."<input type='hidden' id='score".$j."_date".$k."' value='".$result[$j*count($result[0])+$k+1]."'>";
         return $echo_str;
     }
     //显示个人折线图

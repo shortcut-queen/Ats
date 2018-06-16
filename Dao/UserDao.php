@@ -277,7 +277,8 @@ class UserDao
         $whole_number = array("Date_start","Date_end", "project", "Brigade", "Battalion", "Continuous", "Platoon", "Monitor");
         //返回两个日期间的所有日期
         $date = self::getDateFromRange($line_number[0],$line_number[1]);
-        $len_line_number = count($line_number)-1;
+        $length = count($line_number);
+        $len_line_number = $length-1;
         $result_score = array();
         $selectdate =array();
         //判断成绩值越大越好or越小越好
@@ -286,44 +287,50 @@ class UserDao
         $scoreStandard = Conn::query($SQL_SCORE_STANDARD);
         $row = mysql_fetch_array($scoreStandard);
         for($i=0;$i<count($date);$i++) {
-            $result_score_middle = array();
-            for ($k = 0; $k < 4; $k++) {
-                //在数据中选择对应的判别式对sql语句进行补充
-                if ($row[0] < $row[1]) {
-                    $sum = ["< $row[0]", "between $row[0] and $row[1]", "between $row[1] and $row[2]", "> $row[2]"];
-                    $SQL_LINE_CHARTPART = "select count(*) from ats_project_$line_number[2] where Train_Score $sum[$k] and Train_Date = '$date[$i]' and User_Id in(select User_Id from ats_user where ";
-                } else {
-                    $sum1 = [" > $row[0]", "between $row[1] and $row[0]", "between $row[2] and $row[1]", "< $row[2]"];
-                    $SQL_LINE_CHARTPART = "select count(*) from ats_project_$line_number[2] where Train_Score $sum1[$k] and Train_Date = '$date[$i]' and User_Id in(select User_Id from ats_user where ";
+            array_push($selectdate, $date[$i]);
+            //循环插入三个下级
+            for ($n =1; $n<4; $n++){
+                $result_score_middle = array();
+                for ($k = 0; $k < 4; $k++) {
+                    //在数据中选择对应的判别式对sql语句进行补充
+                    if ($row[0] < $row[1]) {
+                        $sum = ["< $row[0]", "between $row[0] and $row[1]", "between $row[1] and $row[2]", ">= $row[2]"];
+                        $SQL_LINE_CHARTPART = "select count(*) from ats_project_$line_number[2] where Train_Score $sum[$k] and Train_Date = '$date[$i]' and User_Id in(select User_Id from ats_user where ";
+                    } else {
+                        $sum1 = [" >= $row[0]", "between $row[1] and $row[0]", "between $row[2] and $row[1]", "< $row[2]"];
+                        $SQL_LINE_CHARTPART = "select count(*) from ats_project_$line_number[2] where Train_Score $sum1[$k] and Train_Date = '$date[$i]' and User_Id in(select User_Id from ats_user where ";
+                    }
+                    //循环插入条件语句
+                    for ($j = 3; $j <= $len_line_number; $j++) {
+                        $SQL_ASSIGMENT = "$whole_number[$j]='$line_number[$j]'";
+                        $SQL_LINE_CHARTPART = "$SQL_LINE_CHARTPART" . "$SQL_ASSIGMENT" . " " . "and" . " ";
+                    }
+                    $SQL_SECOND_ASSIGMENT = "$whole_number[$length] = '$n'";
+                    $SQL_LINE_CHART = "$SQL_LINE_CHARTPART". "$SQL_SECOND_ASSIGMENT" . ")";
+                    $result = Conn::query($SQL_LINE_CHART);
+                    if (mysql_num_rows($result)>= 1) {
+                        array_push($result_score_middle, mysql_fetch_array($result)[0]);
+                    } else {
+                        array_push($result_score_middle, int(0));
+                    }
                 }
-                //循环插入条件语句
-                for ($j = 3; $j < $len_line_number; $j++) {
-                    $SQL_ASSIGMENT = "$whole_number[$j]='$line_number[$j]'";
-                    $SQL_LINE_CHARTPART = "$SQL_LINE_CHARTPART" . "$SQL_ASSIGMENT" . " " . "and" . " ";
+
+                $sumscore = 0;
+                for ($m = 0; $m < 4; $m++) {
+                    $sumscore = $sumscore + $result_score_middle[$m];
                 }
-                $SQL_LINE_CHART = "$SQL_LINE_CHARTPART" . "$whole_number[$len_line_number] = $line_number[$len_line_number]" . ")";
-                #$echo_sql_str=$echo_sql_str.$SQL_LINE_CHART.'</br>';
-                $result = Conn::query($SQL_LINE_CHART);
-                if (mysql_num_rows($result)>= 1) {
-                    array_push($result_score_middle, mysql_fetch_array($result)[0]);
-                } else {
-                    array_push($result_score_middle, int(0));
+                //计算优秀良好及格率
+                if ($sumscore > 0) {
+                    $greatpercent = $result_score_middle[0];
+                    $goodpercent = $result_score_middle[0] + $result_score_middle[1];
+                    $qualifypercent = $result_score_middle[0] + $result_score_middle[1] + $result_score_middle[2];
+                    $resultscore = ($greatpercent * 45 + $goodpercent * 35 + $qualifypercent * 20)/$sumscore ;
+                    array_push($result_score, $resultscore);
                 }
+                if($sumscore==0)
+                    array_push($result_score, 0);
             }
             #echo count($result_score_middle);
-            $sumscore = 0;
-            for ($m = 0; $m < 4; $m++) {
-                $sumscore = $sumscore + $result_score_middle[$m];
-            }
-            //计算优秀良好及格率
-            if ($sumscore > 0) {
-                array_push($selectdate, $date[$i]);
-                $greatpercent = $result_score_middle[0];
-                $goodpercent = $result_score_middle[0] + $result_score_middle[1];
-                $qualifypercent = $result_score_middle[0] + $result_score_middle[1] + $result_score_middle[2];
-                $resultscore = ($greatpercent * 45 + $goodpercent * 35 + $qualifypercent * 20) / $sumscore;
-                array_push($result_score, $resultscore);
-            }
         }
         array_unshift($result_score,$selectdate);
         return $result_score;

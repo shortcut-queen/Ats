@@ -17,20 +17,20 @@ use Ats\Service\ProjectService;
     <script>
         $(document).ready(function(){
             $("#buttonSearch").click(function(){
-                var army_array=new Array(document.scoreTermSearch.startDate.value,document.scoreTermSearch.endDate.value,document.scoreTermSearch.battalion.value,document.scoreTermSearch.continuous.value,document.scoreTermSearch.platoon.value,document.scoreTermSearch.monitor.value,document.scoreTermSearch.project.value);
+                var army_array=new Array(document.scoreTermSearch.startDate.value,document.scoreTermSearch.endDate.value,document.scoreTermSearch.battalion.value,document.scoreTermSearch.continuous.value,document.scoreTermSearch.platoon.value,document.scoreTermSearch.project.value);
                 if(army_array[0]=="" || army_array[1]=="")
                     $("#error_show").text("请选择开始和结束日期");
                 else if(army_array[0]>=army_array[1])
                     $("#error_show").text("请规范选择开始和结束日期");
-                else if(army_array[6]=="all_project")
+                else if(army_array[5]=="all_project")
                     $("#error_show").text("请选择项目");
                 else {
                     var i = 2;
                     var flag = 1;
-                    for (i; i < 6; i++)
+                    for (i; i < 5; i++)
                         if (army_array[i] == "")
                             break;
-                    for (i++; i < 6; i++) {
+                    for (i++; i < 5; i++) {
                         if (army_array[i] != "") {
                             flag = 0;
                             break;
@@ -41,6 +41,18 @@ use Ats\Service\ProjectService;
                     } else {
                         $("#error_show").text("");
                         $("#table_name").text($("select[name='project'] option:selected").text());
+                        var str_array=new Array(new Array("一","二","三",),new Array("营","连","排","班",));
+                        var army_name="";
+                        var h=2;
+                        for(h;h<army_array.length-1;h++){
+                            if(parseInt(army_array[h])!=0&&army_array[h]!='')
+                                army_name=army_name+str_array[0][army_array[h]-1]+str_array[1][h-2];
+                            else
+                                break;
+                        }
+                        var army_name1=army_name+str_array[0][0]+str_array[1][h-2];
+                        var army_name2=army_name+str_array[0][1]+str_array[1][h-2];
+                        var army_name3=army_name+str_array[0][2]+str_array[1][h-2];
                         $.post(document.scoreTermSearch.action,
                             {
                                 form_name: document.scoreTermSearch.form_name.value,
@@ -49,23 +61,34 @@ use Ats\Service\ProjectService;
                                 battalion: document.scoreTermSearch.battalion.value,
                                 continuous: document.scoreTermSearch.continuous.value,
                                 platoon: document.scoreTermSearch.platoon.value,
-                                monitor: document.scoreTermSearch.monitor.value,
                                 project: document.scoreTermSearch.project.value
                             },
                             function (data) {
                                 document.getElementById('myScoreDiv').innerHTML = data;
-                                var dataList = {date: [], score: []};
+                                var dataList = {date: [], score0: [],score1: [],score2: []};
                                 for (var i = 0; ; i++) {
                                     var date_input = document.getElementById('date' + i);
                                     if (date_input == null)
                                         break;
                                     else {
                                         dataList['date'][i] = date_input.name;
-                                        dataList['score'][i] = parseInt(date_input.value);
                                     }
                                 }
+                                for (var j = 0;j<3;j++)
+                                    for(var k=0;k<(dataList['date']).length;k++)
+                                    {
+                                    var score_input = document.getElementById('score' + j+'_date'+k);
+                                    dataList['score'+j][k] = parseInt(score_input.value);
+                                }
+
                                 var myChart = echarts.init(document.getElementById('showLine'));
                                 option = {
+                                    tooltip:{
+                                        trigger:'axis'
+                                    },
+                                    legend:{
+                                        data:[army_name1,army_name2,army_name3]
+                                    },
                                     xAxis: {
                                         type: 'category',
                                         boundaryGap: false,
@@ -75,9 +98,17 @@ use Ats\Service\ProjectService;
                                         type: 'value'
                                     },
                                     series: [{
-                                        data: dataList['score'],
-                                        type: 'line',
-                                        areaStyle: {}
+                                        name:army_name1,
+                                        data: dataList['score0'],
+                                        type: 'line'
+                                    },{
+                                        name:army_name2,
+                                        data: dataList['score1'],
+                                        type: 'line'
+                                    },{
+                                        name:army_name3,
+                                        data: dataList['score2'],
+                                        type: 'line'
                                     }]
                                 };
                                 myChart.setOption(option);
@@ -99,8 +130,7 @@ if($rank==0)
  $option_names=array(
      array('battalion','营级','一营','二营','三营')
     ,array('continuous','连级','一连','二连','三连')
-    ,array('platoon','排级','一排','二排','三排')
-    ,array('monitor','班级','一班','二班','三班'));
+    ,array('platoon','排级','一排','二排','三排'));
     if($rank>0) {
         //查询所有项目名称
         include("../Service/ProjectService.php");
@@ -111,7 +141,7 @@ if($rank==0)
         echo "<input class='form-control' type='date' name='endDate'/>";
         for($j=0;$j<$rank-1;$j++)
             echo "<input type='hidden' name=".$option_names[$j][0]." value='0'/>";
-        for ($i = $rank - 1; $i < 4; $i += 1)
+        for ($i = $rank - 1; $i < 3; $i += 1)
             echo "<select class='form-control' name=".$option_names[$i][0]."><option value=''>--".$option_names[$i][1]."--</option><option value='1'>".$option_names[$i][2]."</option><option value='2'>".$option_names[$i][3]."</option><option value='3'>".$option_names[$i][4]."</option></select>";
         echo "<select class='form-control' name='project'><option value='all_project'>--项目--</option>";
         while ($row=mysql_fetch_array($result))

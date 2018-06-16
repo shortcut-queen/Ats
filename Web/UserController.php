@@ -174,7 +174,7 @@ class UserController{
         $battalion = $_POST['battalion'];
         $continuous = $_POST['continuous'];
         $platoon = $_POST['platoon'];
-        $monitor = $_POST['monitor'];
+        $monitor = 0;
         //返回用户的所属等级
         $result = UserService::findUserinfo($user_id);
         $number = array();
@@ -205,6 +205,7 @@ class UserController{
         $result = UserService::selectLineChart($new_number);
         $echo_str=ResultShow::showLine($result);
         echo $echo_str;
+
     }
     //龙虎榜
     static function longhubang(){

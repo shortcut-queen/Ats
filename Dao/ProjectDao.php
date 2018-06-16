@@ -77,12 +77,11 @@ class ProjectDao
     }
     //查询指定项目是否存在
     static function exitProject($project_name){
-        $SQL_SELECT_EXIT_PROJECT="select Project_Id from ats_project where Project_name = '$project_name'";
+        $SQL_SELECT_EXIT_PROJECT="select Project_Id from ats_project where Project_Name = '$project_name'";
         Conn::init();
-        $result = Conn::excute($SQL_SELECT_EXIT_PROJECT);
+        $result = Conn::query($SQL_SELECT_EXIT_PROJECT);
         Conn::close();
         $row = mysql_fetch_array($result);
-        echo $row[0];
         return $row[0];
     }
     //添加上传的成绩
