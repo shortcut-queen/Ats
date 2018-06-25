@@ -77,13 +77,13 @@ class UserDao
     //添加、修改用户检验，不可存在相同User_Id,一个部队不可存在多个长官
     static function existUser($user_id,$brigade,$battalion,$continuous,$platoon,$monitor,$officer){
         if($officer!=0)
-            $SQL_EXIST_USER="select User_Name from ats_user where (Brigade=$brigade and Battalion=$battalion and Continuous=$continuous and Platoon=$platoon and Monitor=$monitor and Officer=$officer) or User_Id=$user_id";
+            $SQL_EXIST_USER="select count(*) from ats_user where (Brigade=$brigade and Battalion=$battalion and Continuous=$continuous and Platoon=$platoon and Monitor=$monitor and Officer=$officer) or User_Id=$user_id";
         else
-            $SQL_EXIST_USER="select User_Name from ats_user where User_Id=$user_id";
+            $SQL_EXIST_USER="select count(*) from ats_user where User_Id=$user_id";
         Conn::init();
         $result = Conn::query($SQL_EXIST_USER);
         Conn::close();
-        return $result;
+        return mysql_fetch_array($result)[0];
     }
     //添加、修改用户检验，一个班的战士不可以超过八个
     static function countWarrior($user_id,$brigade,$battalion,$continuous,$platoon,$monitor){
